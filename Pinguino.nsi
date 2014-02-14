@@ -28,7 +28,7 @@
 ;General Settings
 
 Name '${FILE_NAME} v${FILE_VERSION}'
-OutFile '..\${FILE_NAME}-${FILE_VERSION}-setup.exe'
+OutFile '${FILE_NAME}-${FILE_VERSION}-setup.exe'
 VIAddVersionKey "ProductName" '${FILE_NAME}'
 VIAddVersionKey "ProductVersion" '${FILE_VERSION}'
 VIAddVersionKey "CompanyName" '${FILE_OWNER}'
