@@ -133,6 +133,9 @@ Section "Install"
      ${endif}
      DetailPrint "beautifulsoup4 installation success. Continue..."
 
+  ;Install libUSB...
+  Call libUSB
+
   Sleep 5000
 
   ;Copy files...
@@ -195,4 +198,17 @@ Function MakeShortcuts
   ;CreateShortCut "$DESKTOP\BarraITS.lnk" "$INSTDIR\${FILE_NAME}\barraITS.exe"
   ;CreateDirectory "$SMPROGRAMS\${FILE_OWNER}\"
   ;CreateShortCut "$SMPROGRAMS\${FILE_OWNER}\BarraITS.lnk" "$INSTDIR\${FILE_NAME}\barraITS.exe"
+FunctionEnd
+
+Function libUSB
+  File "/oname=$SYSDIR\libusb0.dll" ..\libusb\libusb0_x86.dll
+  File "/oname=$SYSDIR\drivers\libusb0.sys" ..\libusb\libusb0.sys
+  File "/oname=$SYSDIR\testlibusb.exe" ..\libusb\testlibusb.exe
+
+  nsExec::Exec '"$SYSDIR\testlibusb.exe"'
+  Pop $R0
+  ${if} $R0 != "0"
+    Abort "libUSB installation failed. Exit code was $R0!"
+  ${endif}
+    DetailPrint "libUSB installation success. Continue..."
 FunctionEnd
