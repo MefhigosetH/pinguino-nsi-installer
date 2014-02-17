@@ -18,6 +18,8 @@
 !define MUI_UNWELCOMEFINISHPAGE_BITMAP "Pinguino-welcomePage.bmp"
 !define ADD_REMOVE "Software\Microsoft\Windows\CurrentVersion\Uninstall\${FILE_NAME}"
 !define PYTHON27URL "http://python.org/ftp/python/2.7.6/python-2.7.6.msi"
+!define PyPIURL "https://raw.github.com/pypa/pip/master/contrib/get-pip.py"
+!define IntelHex "http://www.bialix.com/intelhex/intelhex-1.5.zip"
 
 ;--------------------------------
 ;Includes
@@ -75,20 +77,63 @@ Section "Install"
   ;Tipo de instalacion: AllUsers.
   SetShellVarContext all
 
-  IfFileExists "c:\Python27\Python.exe" Python27Ok Python27Download
+  IfFileExists "C:\Python27\python.exe" Python27Ok Python27Download
 
   Python27Download:
      DetailPrint "Python 2.7 not detected in your system."
-     DetailPrint "We'll download and install it for you in 5 secs."
+     DetailPrint "We'll download and install it for you, in 5 secs."
      Sleep 5000
-     NSISdl::download ${PYTHON27URL} $EXEDIR\python-2.7.6.msi
+     inetc::get ${PYTHON27URL} $EXEDIR\python-2.7.6.msi
      Pop $R0
-     StrCmp $R0 "success" Python27Ok
+     StrCmp $R0 "OK" +2
      Abort "Download Python 2.7 failed: $R0!"
+     ExecWait '"msiexec" /i "$EXEDIR\python-2.7.6.msi"' $0
+     ${if} $0 != "0"
+       Abort "Python 2.7 instalation failed. Exit code was $0!"
+     ${endif}
+     DetailPrint "Python v2.7 installation success. Continue..."
 
   Python27Ok:
-     ExecWait $EXEDIR\python-2.7.6.msi $0
-     DetailPrint "Python exit code: $0."
+     IfFileExists "C:\Python27\Scripts\pip.exe" PyPIok PyPIDownload
+
+  PyPIDownload:
+     DetailPrint "PyPI module not detected in your system."
+     DetailPrint "We'll download and install it for you, in 5 secs."
+     Sleep 5000
+     inetc::get ${PyPIURL} $EXEDIR\get-pip.py
+     Pop $R0
+     StrCmp $R0 "OK" +2
+     Abort "Download PyPI module failed: $R0!"
+     ExecWait '"C:\Python27\python" "$EXEDIR\get-pip.py"' $0
+     ${if} $0 != "0"
+       Abort "PyPI instalation failed. Exit code was $0!"
+     ${endif}
+     DetailPrint "PyPI installation success. Continue..."
+
+  PyPIok:
+     ;IfFileExists "C:\Python27\Scripts\pip.exe" PyPIok PyPIDownload
+     nsExec::Exec '"C:\Python27\Scripts\pip.exe" install wheel'
+     Pop $R0
+     ${if} $R0 != "0"
+       Abort "Wheel module installation failed. Exit code was $R0!"
+     ${endif}
+     DetailPrint "wheel installation success. Continue..."
+
+     nsExec::Exec '"C:\Python27\Scripts\pip.exe" install ${IntelHex}'
+     Pop $R0
+     ${if} $R0 != "0"
+       Abort "IntelHex module installation failed. Exit code was $R0!"
+     ${endif}
+     DetailPrint "IntelHex installation success. Continue..."
+
+     nsExec::Exec '"C:\Python27\Scripts\pip.exe" install beautifulsoup4'
+     Pop $R0
+     ${if} $R0 != "0"
+       Abort "beautifulsoup4 module installation failed. Exit code was $R0!"
+     ${endif}
+     DetailPrint "beautifulsoup4 installation success. Continue..."
+
+  Sleep 5000
 
   ;Copy files...
   Call InstallFiles
