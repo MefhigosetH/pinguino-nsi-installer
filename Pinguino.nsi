@@ -126,7 +126,7 @@ Section "Install"
     DetailPrint "IntelHex installation success. Continue..."
 
   Soup4:
-    IfFileExists "C:\Python27\Scripts\soup4.exe" GITpython +1
+    IfFileExists "C:\Python27\Lib\site-packages\bs4\__init__.py" GITpython +1
     nsExec::Exec '"C:\Python27\Scripts\pip.exe" install beautifulsoup4'
     Pop $R0
     ${if} $R0 != "0"
@@ -135,7 +135,7 @@ Section "Install"
     DetailPrint "beautifulsoup4 installation success. Continue..."
 
   GITpython:
-    IfFileExists "C:\Python27\Scripts\soup4.exe" PyUSB +1
+    IfFileExists "C:\Python27\Lib\site-packages\git\__init__.py" PyUSB +1
     nsExec::Exec '"C:\Python27\Scripts\pip.exe" install gitpython'
     Pop $R0
     ${if} $R0 != "0"
@@ -144,7 +144,7 @@ Section "Install"
     DetailPrint "GIT-Python installation success. Continue..."
 
   PyUSB:
-    IfFileExists "C:\Python27\Scripts\soup4.exe" PySIDE +1
+    IfFileExists "C:\Python27\Lib\site-packages\usb\__init__.py" PySIDE +1
     nsExec::Exec '"C:\Python27\Scripts\pip.exe" install pyusb==1.0.0b1'
     Pop $R0
     ${if} $R0 != "0"
@@ -153,7 +153,7 @@ Section "Install"
     DetailPrint "PyUSB installation success. Continue..."
 
   PySIDE:
-    IfFileExists "C:\Python27\Scripts\pyside-uic.exe" pausa +1
+    IfFileExists "C:\Python27\Lib\site-packages\PySide\__init__.py" pausa +1
     DetailPrint "PySIDE not detected in your system."
     DetailPrint "We'll download and install it for you, in 5secs."
     Sleep 5000
@@ -230,7 +230,7 @@ FunctionEnd
 Function MakeShortcuts
   ;Make shortcuts into desktop and start menu to our program...
   DetailPrint "MakeShortcuts begin..."
-  ;CreateShortCut "$DESKTOP\BarraITS.lnk" "$INSTDIR\${FILE_NAME}\barraITS.exe"
+  CreateShortCut "$DESKTOP\pinguino-ide.lnk" "C:\Python27\python.exe" "$INSTDIR\v${FILE_VERSION}\pinguino.py" 
   ;CreateDirectory "$SMPROGRAMS\${FILE_OWNER}\"
   ;CreateShortCut "$SMPROGRAMS\${FILE_OWNER}\BarraITS.lnk" "$INSTDIR\${FILE_NAME}\barraITS.exe"
 FunctionEnd
