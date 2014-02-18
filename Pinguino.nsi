@@ -17,9 +17,10 @@
 !define MUI_WELCOMEFINISHPAGE_BITMAP "Pinguino-welcomePage.bmp"
 !define MUI_UNWELCOMEFINISHPAGE_BITMAP "Pinguino-welcomePage.bmp"
 !define ADD_REMOVE "Software\Microsoft\Windows\CurrentVersion\Uninstall\${FILE_NAME}"
-!define PYTHON27URL "http://python.org/ftp/python/2.7.6/python-2.7.6.msi"
-!define PyPIURL "https://raw.github.com/pypa/pip/master/contrib/get-pip.py"
+!define Python27 "http://python.org/ftp/python/2.7.6/python-2.7.6.msi"
+!define PyPIP "https://raw.github.com/pypa/pip/master/contrib/get-pip.py"
 !define IntelHex "http://www.bialix.com/intelhex/intelhex-1.5.zip"
+!define PySIDE "http://download.qt-project.org/official_releases/pyside/PySide-1.2.1.win32-py2.7.exe"
 
 ;--------------------------------
 ;Includes
@@ -77,66 +78,100 @@ Section "Install"
   ;Tipo de instalacion: AllUsers.
   SetShellVarContext all
 
-  IfFileExists "C:\Python27\python.exe" Python27Ok Python27Download
+  IfFileExists "C:\Python27\python.exe" PyPIP +1
+  DetailPrint "Python v2.7 not detected in your system."
+  DetailPrint "We'll download and install it for you, in 5 secs."
+  Sleep 5000
+  inetc::get ${Python27} $EXEDIR\python-2.7.6.msi
+  Pop $R0
+  StrCmp $R0 "OK" +2
+  Abort "Python v2.7 download failed: $R0!"
+  ExecWait '"msiexec" /i "$EXEDIR\python-2.7.6.msi"' $0
+  ${if} $0 != "0"
+    Abort "Python v2.7 instalation failed. Exit code was $0!"
+  ${endif}
+  DetailPrint "Python v2.7 installation success. Continue..."
 
-  Python27Download:
-     DetailPrint "Python 2.7 not detected in your system."
-     DetailPrint "We'll download and install it for you, in 5 secs."
-     Sleep 5000
-     inetc::get ${PYTHON27URL} $EXEDIR\python-2.7.6.msi
-     Pop $R0
-     StrCmp $R0 "OK" +2
-     Abort "Download Python 2.7 failed: $R0!"
-     ExecWait '"msiexec" /i "$EXEDIR\python-2.7.6.msi"' $0
-     ${if} $0 != "0"
-       Abort "Python 2.7 instalation failed. Exit code was $0!"
-     ${endif}
-     DetailPrint "Python v2.7 installation success. Continue..."
+  PyPIP:
+    IfFileExists "C:\Python27\Scripts\pip.exe" Wheel +1
+    DetailPrint "PyPIP module not detected in your system."
+    DetailPrint "We'll download and install it for you, in 5 secs."
+    Sleep 5000
+    inetc::get ${PyPIP} $EXEDIR\get-pip.py
+    Pop $R0
+    StrCmp $R0 "OK" +2
+    Abort "Download PyPIP module failed: $R0!"
+    ExecWait '"C:\Python27\python" "$EXEDIR\get-pip.py"' $0
+    ${if} $0 != "0"
+      Abort "PyPIP instalation failed. Exit code was $0!"
+    ${endif}
+    DetailPrint "PyPIP installation success. Continue..."
 
-  Python27Ok:
-     IfFileExists "C:\Python27\Scripts\pip.exe" PyPIok PyPIDownload
+  Wheel:
+    IfFileExists "C:\Python27\Scripts\wheel.exe" IntelHex +1
+    nsExec::Exec '"C:\Python27\Scripts\pip.exe" install wheel'
+    Pop $R0
+    ${if} $R0 != "0"
+      Abort "Wheel module installation failed. Exit code was $R0!"
+    ${endif}
+    DetailPrint "wheel installation success. Continue..."
 
-  PyPIDownload:
-     DetailPrint "PyPI module not detected in your system."
-     DetailPrint "We'll download and install it for you, in 5 secs."
-     Sleep 5000
-     inetc::get ${PyPIURL} $EXEDIR\get-pip.py
-     Pop $R0
-     StrCmp $R0 "OK" +2
-     Abort "Download PyPI module failed: $R0!"
-     ExecWait '"C:\Python27\python" "$EXEDIR\get-pip.py"' $0
-     ${if} $0 != "0"
-       Abort "PyPI instalation failed. Exit code was $0!"
-     ${endif}
-     DetailPrint "PyPI installation success. Continue..."
+  IntelHex:
+    IfFileExists "C:\Python27\Scripts\bin2hex.py" Soup4 +1
+    nsExec::Exec '"C:\Python27\Scripts\pip.exe" install ${IntelHex}'
+    Pop $R0
+    ${if} $R0 != "0"
+      Abort "IntelHex module installation failed. Exit code was $R0!"
+    ${endif}
+    DetailPrint "IntelHex installation success. Continue..."
 
-  PyPIok:
-     ;IfFileExists "C:\Python27\Scripts\pip.exe" PyPIok PyPIDownload
-     nsExec::Exec '"C:\Python27\Scripts\pip.exe" install wheel'
-     Pop $R0
-     ${if} $R0 != "0"
-       Abort "Wheel module installation failed. Exit code was $R0!"
-     ${endif}
-     DetailPrint "wheel installation success. Continue..."
+  Soup4:
+    IfFileExists "C:\Python27\Scripts\soup4.exe" GITpython +1
+    nsExec::Exec '"C:\Python27\Scripts\pip.exe" install beautifulsoup4'
+    Pop $R0
+    ${if} $R0 != "0"
+      Abort "beautifulsoup4 module installation failed. Exit code was $R0!"
+    ${endif}
+    DetailPrint "beautifulsoup4 installation success. Continue..."
 
-     nsExec::Exec '"C:\Python27\Scripts\pip.exe" install ${IntelHex}'
-     Pop $R0
-     ${if} $R0 != "0"
-       Abort "IntelHex module installation failed. Exit code was $R0!"
-     ${endif}
-     DetailPrint "IntelHex installation success. Continue..."
+  GITpython:
+    IfFileExists "C:\Python27\Scripts\soup4.exe" PyUSB +1
+    nsExec::Exec '"C:\Python27\Scripts\pip.exe" install gitpython'
+    Pop $R0
+    ${if} $R0 != "0"
+      Abort "GIT-Python module installation failed. Exit code was $R0!"
+    ${endif}
+    DetailPrint "GIT-Python installation success. Continue..."
 
-     nsExec::Exec '"C:\Python27\Scripts\pip.exe" install beautifulsoup4'
-     Pop $R0
-     ${if} $R0 != "0"
-       Abort "beautifulsoup4 module installation failed. Exit code was $R0!"
-     ${endif}
-     DetailPrint "beautifulsoup4 installation success. Continue..."
+  PyUSB:
+    IfFileExists "C:\Python27\Scripts\soup4.exe" PySIDE +1
+    nsExec::Exec '"C:\Python27\Scripts\pip.exe" install pyusb==1.0.0b1'
+    Pop $R0
+    ${if} $R0 != "0"
+      Abort "PyUSB module installation failed. Exit code was $R0!"
+    ${endif}
+    DetailPrint "PyUSB installation success. Continue..."
+
+  PySIDE:
+    IfFileExists "C:\Python27\Scripts\pyside-uic.exe" pausa +1
+    DetailPrint "PySIDE not detected in your system."
+    DetailPrint "We'll download and install it for you, in 5secs."
+    Sleep 5000
+    inetc::get ${PySIDE} $EXEDIR\PySide-1.2.1.win32-py2.7.exe
+    Pop $R0
+    StrCmp $R0 "OK" +2
+    Abort "PySIDE download failed: $R0!"
+    ExecWait '"$EXEDIR\PySide-1.2.1.win32-py2.7.exe"' $0
+    ${if} $0 != "0"
+      Abort "PySIDE instalation failed. Exit code was $0!"
+    ${endif}
+    DetailPrint "PySIDE installation success. Continue..."
+
+  pausa:
+  Sleep 5000
 
   ;Install libUSB...
   Call libUSB
-
-  Sleep 5000
 
   ;Copy files...
   Call InstallFiles
