@@ -160,6 +160,7 @@ Section "Install"
     DetailPrint "PyUSB installation success. Continue..."
 
   PySIDE:
+    ; PySIDE libraries detection and installation routine.
     IfFileExists "C:\Python27\Lib\site-packages\PySide\__init__.py" pausa +1
     DetailPrint "PySIDE not detected in your system."
     DetailPrint "We'll download and install it for you, in 5secs."
