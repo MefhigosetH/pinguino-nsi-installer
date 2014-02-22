@@ -78,6 +78,7 @@ Section "Install"
   ;Tipo de instalacion: AllUsers.
   SetShellVarContext all
 
+  ; Python v2.7 detection and installation routine.
   IfFileExists "C:\Python27\python.exe" PyPIP +1
   DetailPrint "Python v2.7 not detected in your system."
   DetailPrint "We'll download and install it for you, in 5 secs."
