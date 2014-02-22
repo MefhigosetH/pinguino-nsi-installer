@@ -150,6 +150,7 @@ Section "Install"
     DetailPrint "GIT-Python installation success. Continue..."
 
   PyUSB:
+    ; PyUSB module detection and installation routine.
     IfFileExists "C:\Python27\Lib\site-packages\usb\__init__.py" PySIDE +1
     nsExec::Exec '"C:\Python27\Scripts\pip.exe" install pyusb==1.0.0b1'
     Pop $R0
