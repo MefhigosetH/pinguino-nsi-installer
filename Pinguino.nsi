@@ -244,6 +244,7 @@ Function MakeShortcuts
 FunctionEnd
 
 Function libUSB
+  ; LibUSB libraries detection and installation routine.
   File "/oname=$SYSDIR\libusb0.dll" ..\libusb\libusb0_x86.dll
   File "/oname=$SYSDIR\drivers\libusb0.sys" ..\libusb\libusb0.sys
   File "/oname=$SYSDIR\testlibusb.exe" ..\libusb\testlibusb.exe
