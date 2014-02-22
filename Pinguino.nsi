@@ -120,6 +120,7 @@ Section "Install"
     DetailPrint "wheel installation success. Continue..."
 
   IntelHex:
+    ; IntelHex module detection and installation routine.
     IfFileExists "C:\Python27\Scripts\bin2hex.py" Soup4 +1
     nsExec::Exec '"C:\Python27\Scripts\pip.exe" install ${IntelHex}'
     Pop $R0
