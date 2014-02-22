@@ -110,6 +110,7 @@ Section "Install"
     DetailPrint "PyPIP installation success. Continue..."
 
   Wheel:
+    ; Wheel module detection and installation routine.
     IfFileExists "C:\Python27\Scripts\wheel.exe" IntelHex +1
     nsExec::Exec '"C:\Python27\Scripts\pip.exe" install wheel'
     Pop $R0
