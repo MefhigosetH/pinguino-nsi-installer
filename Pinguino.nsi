@@ -140,6 +140,7 @@ Section "Install"
     DetailPrint "beautifulsoup4 installation success. Continue..."
 
   GITpython:
+    ; python-git module detection and installation routine.
     IfFileExists "C:\Python27\Lib\site-packages\git\__init__.py" PyUSB +1
     nsExec::Exec '"C:\Python27\Scripts\pip.exe" install gitpython'
     Pop $R0
