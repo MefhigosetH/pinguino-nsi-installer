@@ -130,6 +130,7 @@ Section "Install"
     DetailPrint "IntelHex installation success. Continue..."
 
   Soup4:
+    ; BeautifullSoup4 module detection and installation routine.
     IfFileExists "C:\Python27\Lib\site-packages\bs4\__init__.py" GITpython +1
     nsExec::Exec '"C:\Python27\Scripts\pip.exe" install beautifulsoup4'
     Pop $R0
