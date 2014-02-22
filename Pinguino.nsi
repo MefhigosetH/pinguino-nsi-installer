@@ -94,6 +94,7 @@ Section "Install"
   DetailPrint "Python v2.7 installation success. Continue..."
 
   PyPIP:
+    ; PyPIP module detection and installation routine.
     IfFileExists "C:\Python27\Scripts\pip.exe" Wheel +1
     DetailPrint "PyPIP module not detected in your system."
     DetailPrint "We'll download and install it for you, in 5 secs."
