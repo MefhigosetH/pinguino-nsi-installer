@@ -11,6 +11,7 @@ dependences for run the Pinguino IDE out of the box. Some goals achieved are:
 * Download and install all the third party software dependences for the Pinguino IDE.
 * Try to avoid download software that is allready installed on the machine.
 * Many control points and check to ensure correct data.
+* Installer size: Only 300Kb !
 
 ### Requirements
 
@@ -18,7 +19,6 @@ dependences for run the Pinguino IDE out of the box. Some goals achieved are:
 * 250Mb free space on disk for all the downloaded/installed software.
 * This installer should work on any Windows XP, Vista, 7 and 8 machine.
 * Actually, only x86 platform supported. 64-bit OS NOT supported.
-* Installer size: Only 300Kb !
 
 ### Task performed by the installer
 
