@@ -21,6 +21,9 @@
 !define PyPIP "https://raw.github.com/pypa/pip/master/contrib/get-pip.py"
 !define IntelHex "http://www.bialix.com/intelhex/intelhex-1.5.zip"
 !define PySIDE "http://download.qt-project.org/official_releases/pyside/PySide-1.2.1.win32-py2.7.exe"
+!define pinguino-ide "https://github.com/PinguinoIDE/pinguino-ide/archive/master.zip"
+!define pinguino-libraries "https://github.com/PinguinoIDE/pinguino-libraries/archive/master.zip"
+!define pinguino-compilers "https://github.com/PinguinoIDE/pinguino-compilers/archive/master.zip"
 
 ;--------------------------------
 ;Includes
@@ -161,7 +164,7 @@ Section "Install"
 
   PySIDE:
     ; PySIDE libraries detection and installation routine.
-    IfFileExists "C:\Python27\Lib\site-packages\PySide\__init__.py" pausa +1
+    IfFileExists "C:\Python27\Lib\site-packages\PySide\__init__.py" PyModulesOk +1
     DetailPrint "PySIDE not detected in your system."
     DetailPrint "We'll download and install it for you, in 5secs."
     Sleep 5000
@@ -175,8 +178,7 @@ Section "Install"
     ${endif}
     DetailPrint "PySIDE installation success. Continue..."
 
-  pausa:
-  Sleep 5000
+  PyModulesOk:
 
   ;Install libUSB...
   Call libUSB
@@ -204,8 +206,9 @@ Section "Uninstall"
   SetShellVarContext all
 
   ;Eliminamos todos los ficheros que instalamos...
-  ;Delete /REBOOTOK "$INSTDIR\*.*"
-  RMDir /r /REBOOTOK $INSTDIR
+  RMDir /r /REBOOTOK "$INSTDIR\v11"
+  RMDir /r /REBOOTOK "$INSTDIR\libraries"
+  RMDir /r /REBOOTOK "$INSTDIR\compilers"
 
   ;Delete "$DESKTOP\BarraITS.lnk"
   ;RMDir /r "$SMPROGRAMS\${FILE_OWNER}\"
@@ -218,9 +221,101 @@ SectionEnd
 ; Functions
 
 Function InstallFiles
-  ;Copy all the files to the installation folder...
-  DetailPrint "CopyFiles begin..."
-  File /r /x .git ..\${FILE_NAME}\*.*
+  ;------------------------------------------------------------------------
+  ;Try to download and install pinguino-ide repo files from GitHub...
+  ;DetailPrint "We'll download and install pinguino-ide for you, in 5 secs."
+  ;Sleep 5000
+
+  IfFileExists "$EXEDIR\pinguino-ide.zip" +6 +1
+  inetc::get ${pinguino-ide} "$EXEDIR\pinguino-ide.zip"
+  Pop $R0
+  StrCmp $R0 "OK" +2
+  Abort "pinguino-ide download failed: $R0!"
+  DetailPrint "pinguino-ide package download complete."
+
+  ClearErrors
+  ZipDLL::extractall "$EXEDIR\pinguino-ide.zip" "$EXEDIR"
+  IfErrors 0 +2
+    Abort "An error ocurr while extract files from pinguino-ide.zip"
+
+  ClearErrors
+  CreateDirectory "$INSTDIR\v${FILE_VERSION}"
+  CopyFiles "$EXEDIR\pinguino-ide-master\*.*" "$INSTDIR\v${FILE_VERSION}"
+  IfErrors 0 +2
+    Abort "An error ocurr while copying files from pinguino-ide.zip to disk."
+
+  RMDir /r "$EXEDIR\pinguino-ide-master"
+  DetailPrint "pinguino-ide installed."
+
+  ;------------------------------------------------------------------------
+  ;Try to download and install pinguino-libraries repo files from GitHub...
+  DetailPrint "We'll download and install pinguino-ide for you, in 5 secs."
+  Sleep 5000
+
+  IfFileExists "$EXEDIR\pinguino-libraries.zip" +6 +1
+  inetc::get ${pinguino-libraries} "$EXEDIR\pinguino-libraries.zip"
+  Pop $R0
+  StrCmp $R0 "OK" +2
+  Abort "pinguino-libraries download failed: $R0!"
+  DetailPrint "pinguino-libraries package download complete."
+
+  ClearErrors
+  ZipDLL::extractall "$EXEDIR\pinguino-libraries.zip" "$EXEDIR"
+  IfErrors 0 +2
+    Abort "An error ocurr while extract files from pinguino-libraries.zip"
+
+  ClearErrors
+  CreateDirectory "$INSTDIR\libraries\p8"
+  CopyFiles "$EXEDIR\pinguino-libraries-master\p8\*.*" "$INSTDIR\libraries\p8"
+  IfErrors 0 +2
+    Abort "An error ocurr while copying files from pinguino-libraries.zip to p8 directory."
+
+  ClearErrors
+  CreateDirectory "$INSTDIR\libraries\p32"
+  CopyFiles "$EXEDIR\pinguino-libraries-master\p32\*.*" "$INSTDIR\libraries\p32"
+  IfErrors 0 +2
+    Abort "An error ocurr while copying files from pinguino-libraries.zip to p32 directory."
+
+  ClearErrors
+  CreateDirectory "$INSTDIR\v${FILE_VERSION}\examples"
+  CopyFiles "$EXEDIR\pinguino-libraries-master\examples\*.*" "$INSTDIR\v${FILE_VERSION}\examples"
+  IfErrors 0 +2
+    Abort "An error ocurr while copying files from pinguino-libraries.zip to examples directory."
+
+  ClearErrors
+  CreateDirectory "$INSTDIR\v${FILE_VERSION}\graphical_examples"
+  CopyFiles "$EXEDIR\pinguino-libraries-master\graphical_examples\*.*" "$INSTDIR\v${FILE_VERSION}\graphical_examples"
+  IfErrors 0 +2
+    Abort "An error ocurr while copying files from pinguino-libraries.zip to examples directory."
+
+  RMDir /r "$EXEDIR\pinguino-libraries-master"
+  DetailPrint "pinguino-libraries installed."
+
+  ;------------------------------------------------------------------------
+  ;Try to download and install pinguino-compilers repo files from GitHub...
+  DetailPrint "We'll download and install pinguino-ide for you, in 5 secs."
+  Sleep 5000
+
+  IfFileExists "$EXEDIR\pinguino-compilers.zip" +6 +1
+  inetc::get ${pinguino-compilers} "$EXEDIR\pinguino-compilers.zip"
+  Pop $R0
+  StrCmp $R0 "OK" +2
+  Abort "pinguino-compilers download failed: $R0!"
+  DetailPrint "pinguino-compilers package download complete."
+
+  ClearErrors
+  ZipDLL::extractall "$EXEDIR\pinguino-compilers.zip" "$EXEDIR"
+  IfErrors 0 +2
+    Abort "An error ocurr while extract files from pinguino-compilers.zip"
+
+  ClearErrors
+  CreateDirectory "$INSTDIR\compilers"
+  CopyFiles "$EXEDIR\pinguino-compilers-master\win32\*.*" "$INSTDIR\compilers"
+  IfErrors 0 +2
+    Abort "An error ocurr while copying files from pinguino-compilers.zip to compilers directory."
+
+  RMDir /r "$EXEDIR\pinguino-compilers-master"
+  DetailPrint "pinguino-compilers installed."
 FunctionEnd
 
 Function PublishInfo
