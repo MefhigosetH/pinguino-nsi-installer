@@ -39,18 +39,25 @@ It detect, download and install the following packages:
 All the Pinguino project related files are download directly
 from the official repos at GitHub, ensuring updated stuff all the time.
 
+All the files downloaded by this installer from Internet, are store in the same
+folder that the installer. If the installer detect that a software need to be
+installed on the machine BUT the needed file is in this folder, it is used instead
+of download twice the same file.
+
 NOTE: This software does not install (yet) the drivers for the Microchip PIC!
 
 ### Help & Resources
 
-GitHub repo: https://github.com/MefhigosetH/PinguinoIDE-Win-Installer
-Pinguino IDE v11 repo: https://github.com/PinguinoIDE
-Pinguino Site: http://www.pinguino.cc
+* GitHub repo: https://github.com/MefhigosetH/PinguinoIDE-Win-Installer
+* Pinguino IDE v11 repo: https://github.com/PinguinoIDE
+* Pinguino Site: http://www.pinguino.cc
 
 Questions about this installer ? No problem! Drop me an email.
 
-MefhigosetH <mefhigoseth@gmail.com>
+MefhigosetH [mefhigoseth at gmail dot com]
 
 ### Developers
 
-Nothing yet...
+This installer is build with Nullsoft Scriptable Install System v2.46
+
+Tested on Windows 7 Ultimate 32-bit machine.
