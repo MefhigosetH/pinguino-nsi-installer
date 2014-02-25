@@ -213,8 +213,8 @@ SectionEnd
 Function InstallFiles
   ;------------------------------------------------------------------------
   ;Try to download and install pinguino-ide repo files from GitHub...
-  ;DetailPrint "We'll download and install pinguino-ide for you, in 5 secs."
-  ;Sleep 5000
+  DetailPrint "We'll download and install pinguino-ide for you, in 5 secs."
+  Sleep 5000
 
   IfFileExists "$EXEDIR\pinguino-ide.zip" +6 +1
   inetc::get ${pinguino-ide} "$EXEDIR\pinguino-ide.zip"
@@ -239,7 +239,7 @@ Function InstallFiles
 
   ;------------------------------------------------------------------------
   ;Try to download and install pinguino-libraries repo files from GitHub...
-  DetailPrint "We'll download and install pinguino-ide for you, in 5 secs."
+  DetailPrint "We'll download and install pinguino-libraries for you, in 5 secs."
   Sleep 5000
 
   IfFileExists "$EXEDIR\pinguino-libraries.zip" +6 +1
@@ -278,12 +278,18 @@ Function InstallFiles
   IfErrors 0 +2
     Abort "An error ocurr while copying files from pinguino-libraries.zip to examples directory."
 
+  ClearErrors
+  CreateDirectory "$INSTDIR\v${FILE_VERSION}\source"
+  CopyFiles "$EXEDIR\pinguino-libraries-master\source\*.*" "$INSTDIR\v${FILE_VERSION}\source"
+  IfErrors 0 +2
+    Abort "An error ocurr while copying files from pinguino-libraries.zip to source directory."
+
   RMDir /r "$EXEDIR\pinguino-libraries-master"
   DetailPrint "pinguino-libraries installed."
 
   ;------------------------------------------------------------------------
   ;Try to download and install pinguino-compilers repo files from GitHub...
-  DetailPrint "We'll download and install pinguino-ide for you, in 5 secs."
+  DetailPrint "We'll download and install pinguino-compiler for you, in 5 secs."
   Sleep 5000
 
   IfFileExists "$EXEDIR\pinguino-compilers.zip" +6 +1
@@ -300,11 +306,11 @@ Function InstallFiles
 
   ClearErrors
   CreateDirectory "$INSTDIR\compilers"
-  CopyFiles "$EXEDIR\pinguino-compilers-master\win32\*.*" "$INSTDIR\compilers"
+  CopyFiles "$EXEDIR\win32\*.*" "$INSTDIR\compilers"
   IfErrors 0 +2
     Abort "An error ocurr while copying files from pinguino-compilers.zip to compilers directory."
 
-  RMDir /r "$EXEDIR\pinguino-compilers-master"
+  RMDir /r "$EXEDIR\win32"
   DetailPrint "pinguino-compilers installed."
 FunctionEnd
 
