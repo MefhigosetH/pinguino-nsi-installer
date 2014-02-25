@@ -114,23 +114,13 @@ Section "Install"
 
   Wheel:
     ; Wheel module detection and installation routine.
-    IfFileExists "C:\Python27\Scripts\wheel.exe" IntelHex +1
+    IfFileExists "C:\Python27\Scripts\wheel.exe" Soup4 +1
     nsExec::Exec '"C:\Python27\Scripts\pip.exe" install wheel'
     Pop $R0
     ${if} $R0 != "0"
       Abort "Wheel module installation failed. Exit code was $R0!"
     ${endif}
     DetailPrint "wheel installation success. Continue..."
-
-  IntelHex:
-    ; IntelHex module detection and installation routine.
-    IfFileExists "C:\Python27\Scripts\bin2hex.py" Soup4 +1
-    nsExec::Exec '"C:\Python27\Scripts\pip.exe" install ${IntelHex}'
-    Pop $R0
-    ${if} $R0 != "0"
-      Abort "IntelHex module installation failed. Exit code was $R0!"
-    ${endif}
-    DetailPrint "IntelHex installation success. Continue..."
 
   Soup4:
     ; BeautifullSoup4 module detection and installation routine.
