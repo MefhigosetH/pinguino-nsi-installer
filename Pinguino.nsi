@@ -23,7 +23,7 @@
 !define PySIDE "http://download.qt-project.org/official_releases/pyside/PySide-1.2.1.win32-py2.7.exe"
 !define pinguino-ide "https://github.com/PinguinoIDE/pinguino-ide/archive/master.zip"
 !define pinguino-libraries "https://github.com/PinguinoIDE/pinguino-libraries/archive/master.zip"
-!define pinguino-compilers "https://github.com/PinguinoIDE/pinguino-compilers/archive/master.zip"
+!define pinguino-compilers "https://github.com/PinguinoIDE/pinguino-compilers/releases/download/2014.02/win32.zip"
 
 ;--------------------------------
 ;Includes
