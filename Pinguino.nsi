@@ -183,7 +183,7 @@ Section "Install"
   Call MakeShortcuts
 
   ;Creamos el Unistaller.
-  WriteUninstaller "$INSTDIR\v${FILE_VERSION}\uninstall.exe"
+  WriteUninstaller "$INSTDIR\pinguino-uninstall.exe"
 
 SectionEnd
 
