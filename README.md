@@ -16,7 +16,8 @@ dependences for run the Pinguino IDE out of the box. Some goals achieved are:
 ### Requirements
 
 * A fast Internet conection.
-* 250Mb free space on disk for all the downloaded/installed software.
+* 100Mb free space on disk for the downloaded files.
+* 500Mb free space on disk for all the installed software.
 * This installer should work on any Windows XP, Vista, 7 and 8 machine.
 * Actually, only x86 platform supported. 64-bit OS NOT supported.
 
@@ -27,7 +28,6 @@ It detect, download and install the following packages:
 * Python v2.7
 * PyPIP
 * Wheel
-* IntelHex
 * BeautifullSoup4
 * python-git
 * PyUSB
