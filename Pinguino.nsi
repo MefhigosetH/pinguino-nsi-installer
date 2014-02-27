@@ -22,7 +22,7 @@
 !define IntelHex "http://www.bialix.com/intelhex/intelhex-1.5.zip"
 !define PySIDE "http://download.qt-project.org/official_releases/pyside/PySide-1.2.1.win32-py2.7.exe"
 !define pinguino-ide "https://github.com/PinguinoIDE/pinguino-ide/archive/master.zip"
-!define pinguino-libraries "https://github.com/PinguinoIDE/pinguino-libraries/archive/master.zip"
+!define pinguino-libraries "https://github.com/PinguinoIDE/pinguino-libraries/archive/2014.02.zip"
 !define pinguino-compilers "https://github.com/PinguinoIDE/pinguino-compilers/releases/download/2014.02/win32.zip"
 
 ;--------------------------------
@@ -256,35 +256,35 @@ Function InstallFiles
 
   ClearErrors
   CreateDirectory "$INSTDIR\libraries\p8"
-  CopyFiles "$EXEDIR\pinguino-libraries-master\p8\*.*" "$INSTDIR\libraries\p8"
+  CopyFiles "$EXEDIR\pinguino-libraries-2014.02\p8\*.*" "$INSTDIR\libraries\p8"
   IfErrors 0 +2
     Abort "An error ocurr while copying files from pinguino-libraries.zip to p8 directory."
 
   ClearErrors
   CreateDirectory "$INSTDIR\libraries\p32"
-  CopyFiles "$EXEDIR\pinguino-libraries-master\p32\*.*" "$INSTDIR\libraries\p32"
+  CopyFiles "$EXEDIR\pinguino-libraries-2014.02\p32\*.*" "$INSTDIR\libraries\p32"
   IfErrors 0 +2
     Abort "An error ocurr while copying files from pinguino-libraries.zip to p32 directory."
 
   ClearErrors
   CreateDirectory "$INSTDIR\v${FILE_VERSION}\examples"
-  CopyFiles "$EXEDIR\pinguino-libraries-master\examples\*.*" "$INSTDIR\v${FILE_VERSION}\examples"
+  CopyFiles "$EXEDIR\pinguino-libraries-2014.02\examples\*.*" "$INSTDIR\v${FILE_VERSION}\examples"
   IfErrors 0 +2
     Abort "An error ocurr while copying files from pinguino-libraries.zip to examples directory."
 
   ClearErrors
   CreateDirectory "$INSTDIR\v${FILE_VERSION}\graphical_examples"
-  CopyFiles "$EXEDIR\pinguino-libraries-master\graphical_examples\*.*" "$INSTDIR\v${FILE_VERSION}\graphical_examples"
+  CopyFiles "$EXEDIR\pinguino-libraries-2014.02\graphical_examples\*.*" "$INSTDIR\v${FILE_VERSION}\graphical_examples"
   IfErrors 0 +2
     Abort "An error ocurr while copying files from pinguino-libraries.zip to examples directory."
 
   ClearErrors
   CreateDirectory "$INSTDIR\v${FILE_VERSION}\source"
-  CopyFiles "$EXEDIR\pinguino-libraries-master\source\*.*" "$INSTDIR\v${FILE_VERSION}\source"
+  CopyFiles "$EXEDIR\pinguino-libraries-2014.02\source\*.*" "$INSTDIR\v${FILE_VERSION}\source"
   IfErrors 0 +2
     Abort "An error ocurr while copying files from pinguino-libraries.zip to source directory."
 
-  RMDir /r "$EXEDIR\pinguino-libraries-master"
+  RMDir /r "$EXEDIR\pinguino-libraries-2014.02"
   DetailPrint "pinguino-libraries installed."
 
   ;------------------------------------------------------------------------
@@ -319,7 +319,7 @@ Function PublishInfo
   DetailPrint "PublishInfo begin..."
   WriteRegStr HKCU "Software\Pinguino" "" "$INSTDIR\v${FILE_VERSION}"
   WriteRegStr HKLM "${ADD_REMOVE}" "DisplayName" "${FILE_NAME} v${FILE_VERSION}"
-  WriteRegStr HKLM "${ADD_REMOVE}" "UninstallString" "$\"$INSTDIR\v${FILE_VERSION}\uninstall.exe$\""
+  WriteRegStr HKLM "${ADD_REMOVE}" "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
   WriteRegStr HKLM "${ADD_REMOVE}" "QuietUninstallString" "$\"$INSTDIR\v${FILE_VERSION}\uninstall.exe$\" /S"
   WriteRegStr HKLM "${ADD_REMOVE}" "HelpLink" "${FILE_URL}"
   WriteRegStr HKLM "${ADD_REMOVE}" "URLInfoAbout" "${FILE_URL}"
