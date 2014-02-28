@@ -64,8 +64,14 @@ VIProductVersion '${FILE_INSTVERSION}'
 ;--------------------------------
 ;Languages
 
-!insertmacro MUI_LANGUAGE "Spanish"
 !insertmacro MUI_LANGUAGE "English"
+!insertmacro MUI_LANGUAGE "Spanish"
+
+Function .onInit
+
+  !insertmacro MUI_LANGDLL_DISPLAY
+
+FunctionEnd
 
 ;--------------------------------
 ;Installer Sections
