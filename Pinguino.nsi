@@ -11,8 +11,8 @@
 !define FILE_OWNER 'Pinguino Project'
 !define FILE_URL 'http://www.pinguino.cc/'
 !define MUI_ABORTWARNING
-!define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\orange-install.ico"
-!define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\orange-uninstall.ico"
+!define MUI_ICON "pinguino-logo-v2.ico"
+!define MUI_UNICON "pinguino-logo-v2.ico"
 !define MUI_INSTFILESPAGE_PROGRESSBAR "smooth"
 !define MUI_WELCOMEFINISHPAGE_BITMAP "Pinguino-welcomePage.bmp"
 !define MUI_UNWELCOMEFINISHPAGE_BITMAP "Pinguino-welcomePage.bmp"
