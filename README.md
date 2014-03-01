@@ -12,6 +12,7 @@ dependences for run the Pinguino IDE out of the box. Some goals achieved are:
 * Try to avoid download software that is allready installed on the machine.
 * Many control points and check to ensure correct data.
 * Installer size: Only 300Kb !
+* Multi-language: English and Spanish supported.
 
 ### Requirements
 
