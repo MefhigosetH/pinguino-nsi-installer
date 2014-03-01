@@ -239,8 +239,8 @@ Section "Uninstall"
   RMDir /r /REBOOTOK "$INSTDIR\libraries"
   RMDir /r /REBOOTOK "$INSTDIR\compilers"
 
-  ;Delete "$DESKTOP\BarraITS.lnk"
-  ;RMDir /r "$SMPROGRAMS\${FILE_OWNER}\"
+  Delete "$DESKTOP\pinguino-ide.lnk"
+  RMDir /r "$SMPROGRAMS\${FILE_OWNER}\"
   DeleteRegKey /ifempty HKCU "Software\Pinguino"
   DeleteRegKey HKLM "${ADD_REMOVE}"
 
@@ -354,6 +354,8 @@ Function InstallFiles
 
   RMDir /r "$EXEDIR\win32"
   DetailPrint "pinguino-compilers $(msg_installed)"
+
+  File "/oname=$INSTDIR\v${FILE_VERSION}\pinguino-logo-v2.ico" pinguino-logo-v2.ico
 FunctionEnd
 
 Function PublishInfo
@@ -371,9 +373,9 @@ FunctionEnd
 Function MakeShortcuts
   ;Make shortcuts into desktop and start menu to our program...
   DetailPrint "MakeShortcuts begin..."
-  CreateShortCut "$DESKTOP\pinguino-ide.lnk" "C:\Python27\python.exe" "$INSTDIR\v${FILE_VERSION}\pinguino.py" 
-  ;CreateDirectory "$SMPROGRAMS\${FILE_OWNER}\"
-  ;CreateShortCut "$SMPROGRAMS\${FILE_OWNER}\BarraITS.lnk" "$INSTDIR\${FILE_NAME}\barraITS.exe"
+  CreateShortCut "$DESKTOP\pinguino-ide.lnk" "$INSTDIR\v${FILE_VERSION}\pinguino.bat" "" "$INSTDIR\v${FILE_VERSION}\pinguino-logo-v2.ico"
+  CreateDirectory "$SMPROGRAMS\${FILE_OWNER}\"
+  CreateShortCut "$SMPROGRAMS\${FILE_OWNER}\pinguino-ide.lnk" "$INSTDIR\v${FILE_VERSION}\pinguino.bat" "" "$INSTDIR\v${FILE_VERSION}\pinguino-logo-v2.ico"
 FunctionEnd
 
 Function libUSB
