@@ -73,6 +73,30 @@ Function .onInit
 
 FunctionEnd
 
+LangString msg_not_detected ${LANG_ENGLISH} "not detected in your system."
+LangString msg_not_detected ${LANG_SPANISH} "no detectado en el sistema."
+
+LangString msg_download_and_install ${LANG_ENGLISH} "We'll download and install it for you, in 5 secs."
+LangString msg_download_and_install ${LANG_SPANISH} "Lo descargaremos e instalaremos por ti, en 5 segundos."
+
+LangString msg_installed ${LANG_ENGLISH} "installed."
+LangString msg_installed ${LANG_SPANISH} "instalado correctamente."
+
+LangString msg_not_installed ${LANG_ENGLISH} "not installed. Error code was:"
+LangString msg_not_installed ${LANG_SPANISH} "no instalado. El error fue:"
+
+LangString msg_download_complete ${LANG_ENGLISH} "download complete."
+LangString msg_download_complete ${LANG_SPANISH} "descargado correctamente."
+
+LangString msg_download_error ${LANG_ENGLISH} "download failed. Error was:"
+LangString msg_download_error ${LANG_SPANISH} "no se pudo descargar. El error fue:"
+
+LangString msg_error_while_extracting ${LANG_ENGLISH} "An error ocurr while extracting files from"
+LangString msg_error_while_extracting ${LANG_SPANISH} "Se ha producido un error mientras se descomprimia"
+
+LangString msg_error_while_copying ${LANG_ENGLISH} "An error ocurr while copying files to"
+LangString msg_error_while_copying ${LANG_SPANISH} "Se ha producido un error mientras se copiaban los archivos en el directorio"
+
 ;--------------------------------
 ;Installer Sections
 
@@ -89,34 +113,36 @@ Section "Install"
 
   ; Python v2.7 detection and installation routine.
   IfFileExists "C:\Python27\python.exe" PyPIP +1
-  DetailPrint "Python v2.7 not detected in your system."
-  DetailPrint "We'll download and install it for you, in 5 secs."
+  DetailPrint "Python v2.7 $(msg_not_detected)"
+  DetailPrint $(msg_download_and_install)
   Sleep 5000
   inetc::get ${Python27} $EXEDIR\python-2.7.6.msi
   Pop $R0
   StrCmp $R0 "OK" +2
-  Abort "Python v2.7 download failed: $R0!"
+  Abort "Python v2.7 $(msg_download_error) $R0!"
+  DetailPrint "Python v2.7 $(msg_download_complete)"
   ExecWait '"msiexec" /i "$EXEDIR\python-2.7.6.msi"' $0
   ${if} $0 != "0"
-    Abort "Python v2.7 instalation failed. Exit code was $0!"
+    Abort "Python v2.7 $(msg_not_installed) $0!"
   ${endif}
-  DetailPrint "Python v2.7 installation success. Continue..."
+  DetailPrint "Python v2.7 $(msg_installed)"
 
   PyPIP:
     ; PyPIP module detection and installation routine.
     IfFileExists "C:\Python27\Scripts\pip.exe" Wheel +1
-    DetailPrint "PyPIP module not detected in your system."
-    DetailPrint "We'll download and install it for you, in 5 secs."
+    DetailPrint "PyPIP $(msg_not_detected)"
+    DetailPrint $(msg_download_and_install)
     Sleep 5000
     inetc::get ${PyPIP} $EXEDIR\get-pip.py
     Pop $R0
     StrCmp $R0 "OK" +2
-    Abort "Download PyPIP module failed: $R0!"
+    Abort "PyPIP $(msg_download_error) $R0!"
+    DetailPrint "PyPIP $(msg_download_complete)"
     ExecWait '"C:\Python27\python" "$EXEDIR\get-pip.py"' $0
     ${if} $0 != "0"
-      Abort "PyPIP instalation failed. Exit code was $0!"
+      Abort "PyPIP $(msg_not_installed) $0!"
     ${endif}
-    DetailPrint "PyPIP installation success. Continue..."
+    DetailPrint "PyPIP $(msg_installed)"
 
   Wheel:
     ; Wheel module detection and installation routine.
@@ -124,9 +150,9 @@ Section "Install"
     nsExec::Exec '"C:\Python27\Scripts\pip.exe" install wheel'
     Pop $R0
     ${if} $R0 != "0"
-      Abort "Wheel module installation failed. Exit code was $R0!"
+      Abort "Wheel $(msg_not_installed) $R0!"
     ${endif}
-    DetailPrint "wheel installation success. Continue..."
+    DetailPrint "wheel $(msg_installed)"
 
   Soup4:
     ; BeautifullSoup4 module detection and installation routine.
@@ -134,9 +160,9 @@ Section "Install"
     nsExec::Exec '"C:\Python27\Scripts\pip.exe" install beautifulsoup4'
     Pop $R0
     ${if} $R0 != "0"
-      Abort "beautifulsoup4 module installation failed. Exit code was $R0!"
+      Abort "beautifulsoup4 $(msg_not_installed) $R0!"
     ${endif}
-    DetailPrint "beautifulsoup4 installation success. Continue..."
+    DetailPrint "beautifulsoup4 $(msg_installed)"
 
   GITpython:
     ; python-git module detection and installation routine.
@@ -144,9 +170,9 @@ Section "Install"
     nsExec::Exec '"C:\Python27\Scripts\pip.exe" install gitpython'
     Pop $R0
     ${if} $R0 != "0"
-      Abort "GIT-Python module installation failed. Exit code was $R0!"
+      Abort "GIT-Python $(msg_not_installed) $R0!"
     ${endif}
-    DetailPrint "GIT-Python installation success. Continue..."
+    DetailPrint "GIT-Python $(msg_installed)"
 
   PyUSB:
     ; PyUSB module detection and installation routine.
@@ -154,25 +180,26 @@ Section "Install"
     nsExec::Exec '"C:\Python27\Scripts\pip.exe" install pyusb==1.0.0b1'
     Pop $R0
     ${if} $R0 != "0"
-      Abort "PyUSB module installation failed. Exit code was $R0!"
+      Abort "PyUSB $(msg_not_installed) $R0!"
     ${endif}
-    DetailPrint "PyUSB installation success. Continue..."
+    DetailPrint "PyUSB $(msg_installed)"
 
   PySIDE:
     ; PySIDE libraries detection and installation routine.
     IfFileExists "C:\Python27\Lib\site-packages\PySide\__init__.py" PyModulesOk +1
-    DetailPrint "PySIDE not detected in your system."
-    DetailPrint "We'll download and install it for you, in 5secs."
+    DetailPrint "PySIDE $(msg_not_detected)"
+    DetailPrint $(msg_download_and_install)
     Sleep 5000
     inetc::get ${PySIDE} $EXEDIR\PySide-1.2.1.win32-py2.7.exe
     Pop $R0
     StrCmp $R0 "OK" +2
-    Abort "PySIDE download failed: $R0!"
+    Abort "PySIDE $(msg_download_error) $R0!"
+    DetailPrint "PySIDE $(msg_download_complete)"
     ExecWait '"$EXEDIR\PySide-1.2.1.win32-py2.7.exe"' $0
     ${if} $0 != "0"
-      Abort "PySIDE instalation failed. Exit code was $0!"
+      Abort "PySIDE $(msg_not_installed) $0!"
     ${endif}
-    DetailPrint "PySIDE installation success. Continue..."
+    DetailPrint "PySIDE $(msg_installed)"
 
   PyModulesOk:
 
@@ -219,15 +246,16 @@ SectionEnd
 Function InstallFiles
   ;------------------------------------------------------------------------
   ;Try to download and install pinguino-ide repo files from GitHub...
-  DetailPrint "We'll download and install pinguino-ide for you, in 5 secs."
+  DetailPrint "pinguino-ide $(msg_not_detected)"
+  DetailPrint $(msg_download_and_install)
   Sleep 5000
 
   IfFileExists "$EXEDIR\pinguino-ide.zip" +6 +1
   inetc::get ${pinguino-ide} "$EXEDIR\pinguino-ide.zip"
   Pop $R0
   StrCmp $R0 "OK" +2
-  Abort "pinguino-ide download failed: $R0!"
-  DetailPrint "pinguino-ide package download complete."
+  Abort "pinguino-ide $(msg_download_error) $R0!"
+  DetailPrint "pinguino-ide $(msg_download_complete)"
 
   ClearErrors
   ZipDLL::extractall "$EXEDIR\pinguino-ide.zip" "$EXEDIR"
@@ -238,86 +266,88 @@ Function InstallFiles
   CreateDirectory "$INSTDIR\v${FILE_VERSION}"
   CopyFiles "$EXEDIR\pinguino-ide-master\*.*" "$INSTDIR\v${FILE_VERSION}"
   IfErrors 0 +2
-    Abort "An error ocurr while copying files from pinguino-ide.zip to disk."
+    Abort "pinguino-ide.zip: $(msg_error_while_copying) $INSTDIR\v${FILE_VERSION}"
 
   RMDir /r "$EXEDIR\pinguino-ide-master"
-  DetailPrint "pinguino-ide installed."
+  DetailPrint "pinguino-ide $(msg_installed)"
 
   ;------------------------------------------------------------------------
   ;Try to download and install pinguino-libraries repo files from GitHub...
-  DetailPrint "We'll download and install pinguino-libraries for you, in 5 secs."
+  DetailPrint "pinguino-libraries $(msg_not_detected)"
+  DetailPrint $(msg_download_and_install)
   Sleep 5000
 
   IfFileExists "$EXEDIR\pinguino-libraries.zip" +6 +1
   inetc::get ${pinguino-libraries} "$EXEDIR\pinguino-libraries.zip"
   Pop $R0
   StrCmp $R0 "OK" +2
-  Abort "pinguino-libraries download failed: $R0!"
-  DetailPrint "pinguino-libraries package download complete."
+  Abort "pinguino-libraries $(msg_download_error) $R0!"
+  DetailPrint "pinguino-libraries $(msg_download_complete)"
 
   ClearErrors
   ZipDLL::extractall "$EXEDIR\pinguino-libraries.zip" "$EXEDIR"
   IfErrors 0 +2
-    Abort "An error ocurr while extract files from pinguino-libraries.zip"
+    Abort "$(msg_error_while_extracting) pinguino-libraries.zip"
 
   ClearErrors
   CreateDirectory "$INSTDIR\libraries\p8"
   CopyFiles "$EXEDIR\pinguino-libraries-2014.02\p8\*.*" "$INSTDIR\libraries\p8"
   IfErrors 0 +2
-    Abort "An error ocurr while copying files from pinguino-libraries.zip to p8 directory."
+    Abort "pinguino-libraries.zip: $(msg_error_while_copying) p8"
 
   ClearErrors
   CreateDirectory "$INSTDIR\libraries\p32"
   CopyFiles "$EXEDIR\pinguino-libraries-2014.02\p32\*.*" "$INSTDIR\libraries\p32"
   IfErrors 0 +2
-    Abort "An error ocurr while copying files from pinguino-libraries.zip to p32 directory."
+    Abort "pinguino-libraries.zip: $(msg_error_while_copying) p32"
 
   ClearErrors
   CreateDirectory "$INSTDIR\v${FILE_VERSION}\examples"
   CopyFiles "$EXEDIR\pinguino-libraries-2014.02\examples\*.*" "$INSTDIR\v${FILE_VERSION}\examples"
   IfErrors 0 +2
-    Abort "An error ocurr while copying files from pinguino-libraries.zip to examples directory."
+    Abort "pinguino-libraries.zip: $(msg_error_while_copying) examples"
 
   ClearErrors
   CreateDirectory "$INSTDIR\v${FILE_VERSION}\graphical_examples"
   CopyFiles "$EXEDIR\pinguino-libraries-2014.02\graphical_examples\*.*" "$INSTDIR\v${FILE_VERSION}\graphical_examples"
   IfErrors 0 +2
-    Abort "An error ocurr while copying files from pinguino-libraries.zip to examples directory."
+    Abort "pinguino-libraries.zip: $(msg_error_while_copying) graphical_examples"
 
   ClearErrors
   CreateDirectory "$INSTDIR\v${FILE_VERSION}\source"
   CopyFiles "$EXEDIR\pinguino-libraries-2014.02\source\*.*" "$INSTDIR\v${FILE_VERSION}\source"
   IfErrors 0 +2
-    Abort "An error ocurr while copying files from pinguino-libraries.zip to source directory."
+    Abort "pinguino-libraries.zip: $(msg_error_while_copying) source"
 
   RMDir /r "$EXEDIR\pinguino-libraries-2014.02"
-  DetailPrint "pinguino-libraries installed."
+  DetailPrint "pinguino-libraries $(msg_installed)"
 
   ;------------------------------------------------------------------------
   ;Try to download and install pinguino-compilers repo files from GitHub...
-  DetailPrint "We'll download and install pinguino-compiler for you, in 5 secs."
+  DetailPrint "pinguino-compilers $(msg_not_detected)"
+  DetailPrint $(msg_download_and_install)
   Sleep 5000
 
   IfFileExists "$EXEDIR\pinguino-compilers.zip" +6 +1
   inetc::get ${pinguino-compilers} "$EXEDIR\pinguino-compilers.zip"
   Pop $R0
   StrCmp $R0 "OK" +2
-  Abort "pinguino-compilers download failed: $R0!"
-  DetailPrint "pinguino-compilers package download complete."
+  Abort "pinguino-compilers $(msg_download_error) $R0!"
+  DetailPrint "pinguino-compilers $(msg_download_complete)"
 
   ClearErrors
   ZipDLL::extractall "$EXEDIR\pinguino-compilers.zip" "$EXEDIR"
   IfErrors 0 +2
-    Abort "An error ocurr while extract files from pinguino-compilers.zip"
+    Abort "$(msg_error_while_extracting) pinguino-compilers.zip"
 
   ClearErrors
   CreateDirectory "$INSTDIR\compilers"
   CopyFiles "$EXEDIR\win32\*.*" "$INSTDIR\compilers"
   IfErrors 0 +2
-    Abort "An error ocurr while copying files from pinguino-compilers.zip to compilers directory."
+    Abort "pinguino-compilers.zip: $(msg_error_while_copying) compilers"
 
   RMDir /r "$EXEDIR\win32"
-  DetailPrint "pinguino-compilers installed."
+  DetailPrint "pinguino-compilers $(msg_installed)"
 FunctionEnd
 
 Function PublishInfo
@@ -349,7 +379,7 @@ Function libUSB
   nsExec::Exec '"$SYSDIR\testlibusb.exe"'
   Pop $R0
   ${if} $R0 != "0"
-    Abort "libUSB installation failed. Exit code was $R0!"
+    Abort "libUSB $(msg_not_installed) $R0!"
   ${endif}
-    DetailPrint "libUSB installation success. Continue..."
+    DetailPrint "libUSB $(msg_installed)"
 FunctionEnd
