@@ -73,6 +73,12 @@ Function .onInit
 
 FunctionEnd
 
+Function un.onInit
+
+  !insertmacro MUI_LANGDLL_DISPLAY
+
+FunctionEnd
+
 LangString msg_not_detected ${LANG_ENGLISH} "not detected in your system."
 LangString msg_not_detected ${LANG_SPANISH} "no detectado en el sistema."
 
