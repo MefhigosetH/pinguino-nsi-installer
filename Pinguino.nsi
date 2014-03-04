@@ -30,6 +30,7 @@
 
 !include "MUI2.nsh"
 !include "FileFunc.nsh"
+!include "WinVer.nsh"
 
 ;--------------------------------
 ;General Settings
@@ -39,6 +40,8 @@ OutFile '${FILE_NAME}-${FILE_VERSION}-setup.exe'
 BrandingText '${FILE_OWNER}'
 InstallDir 'C:\${FILE_NAME}'
 ShowInstDetails show
+;Request Admin execution level. Needed to install drivers.
+RequestExecutionLevel admin
 
 VIAddVersionKey "ProductName" '${FILE_NAME}'
 VIAddVersionKey "ProductVersion" '${FILE_VERSION}'
@@ -102,6 +105,12 @@ LangString msg_error_while_extracting ${LANG_SPANISH} "Se ha producido un error 
 
 LangString msg_error_while_copying ${LANG_ENGLISH} "An error ocurr while copying files to"
 LangString msg_error_while_copying ${LANG_SPANISH} "Se ha producido un error mientras se copiaban los archivos en el directorio"
+
+LangString msg_your_system_is ${LANG_ENGLISH} "Your Operating System is at least"
+LangString msg_your_system_is ${LANG_SPANISH} "Tu Sistema Operativo es al menos"
+
+LangString msg_installing_drivers ${LANG_ENGLISH} "Installing the Pinguino Project device drivers"
+LangString msg_installing_drivers ${LANG_SPANISH} "Instalando los controladores para el dispositivo Pinguino Project"
 
 ;--------------------------------
 ;Installer Sections
@@ -209,11 +218,11 @@ Section "Install"
 
   PyModulesOk:
 
-  ;Install libUSB...
-  Call libUSB
-
   ;Copy files...
   Call InstallFiles
+
+  ;Install device drivers...
+  Call InstallDrivers
 
   ;Publish the project info to the system...
   Call PublishInfo
@@ -363,8 +372,8 @@ Function PublishInfo
   DetailPrint "PublishInfo begin..."
   WriteRegStr HKCU "Software\Pinguino" "" "$INSTDIR\v${FILE_VERSION}"
   WriteRegStr HKLM "${ADD_REMOVE}" "DisplayName" "${FILE_NAME} v${FILE_VERSION}"
-  WriteRegStr HKLM "${ADD_REMOVE}" "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
-  WriteRegStr HKLM "${ADD_REMOVE}" "QuietUninstallString" "$\"$INSTDIR\v${FILE_VERSION}\uninstall.exe$\" /S"
+  WriteRegStr HKLM "${ADD_REMOVE}" "UninstallString" "$\"$INSTDIR\pinguino-uninstall.exe$\""
+  WriteRegStr HKLM "${ADD_REMOVE}" "QuietUninstallString" "$\"$INSTDIR\pinguino-uninstall.exe$\" /S"
   WriteRegStr HKLM "${ADD_REMOVE}" "HelpLink" "${FILE_URL}"
   WriteRegStr HKLM "${ADD_REMOVE}" "URLInfoAbout" "${FILE_URL}"
   WriteRegStr HKLM "${ADD_REMOVE}" "Publisher" "${FILE_OWNER}"
@@ -378,16 +387,41 @@ Function MakeShortcuts
   CreateShortCut "$SMPROGRAMS\${FILE_OWNER}\pinguino-ide.lnk" "$INSTDIR\v${FILE_VERSION}\pinguino.bat" "" "$INSTDIR\v${FILE_VERSION}\pinguino-logo-v2.ico"
 FunctionEnd
 
-Function libUSB
-  ; LibUSB libraries detection and installation routine.
-  File "/oname=$SYSDIR\libusb0.dll" ..\libusb\libusb0_x86.dll
-  File "/oname=$SYSDIR\drivers\libusb0.sys" ..\libusb\libusb0.sys
-  File "/oname=$SYSDIR\testlibusb.exe" ..\libusb\testlibusb.exe
+Function InstallDrivers
+  Var /GLOBAL os_platform
+  StrCpy $os_platform "32"
+  Var /GLOBAL os_version
 
-  nsExec::Exec '"$SYSDIR\testlibusb.exe"'
-  Pop $R0
-  ${if} $R0 != "0"
-    Abort "libUSB $(msg_not_installed) $R0!"
-  ${endif}
-    DetailPrint "libUSB $(msg_installed)"
+  DetailPrint "$(msg_installing_drivers)..."
+
+  SetOutPath "$INSTDIR\drivers"
+  File /r "..\drivers\*.*"
+
+  StrCmp $PROGRAMFILES $PROGRAMFILES64 +2
+  StrCpy $os_platform "64"
+
+  ${If} ${AtLeastWinVista}
+    StrCpy $os_version "Vista"
+
+  ${Else}
+    StrCpy $os_version "XP"
+
+    ; LibUSB libraries detection and installation routine.
+    CopyFiles "$INSTDIR\drivers\Vista\x86\libusb0_x86.dll" "$SYSDIR\libusb0.dll"
+    CopyFiles "$INSTDIR\drivers\Vista\x86\libusb0.sys" "$SYSDIR\drivers\libusb0.sys"
+    CopyFiles "$INSTDIR\drivers\testlibusb.exe" "$SYSDIR\testlibusb.exe"
+
+    nsExec::Exec '"$SYSDIR\testlibusb.exe"'
+    Pop $R0
+    ${if} $R0 != "0"
+      Abort "libUSB $(msg_not_installed) $R0!"
+    ${endif}
+      DetailPrint "libUSB $(msg_installed)"
+
+  ${EndIf}
+
+  DetailPrint "$(msg_your_system_is) Microsoft Windows $os_version ($os_platform bits)."
+  DetailPrint "$INSTDIR\drivers\DPInst$os_platform.exe /LM /SW /PATH $INSTDIR\drivers\$os_version\"
+  nsExec::Exec '$INSTDIR\drivers\DPInst$os_platform.exe /LM /SW /PATH $INSTDIR\drivers\$os_version\'
+  Sleep 5000
 FunctionEnd
