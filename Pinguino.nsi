@@ -18,7 +18,7 @@
 !define MUI_UNWELCOMEFINISHPAGE_BITMAP "Pinguino-welcomePage.bmp"
 !define ADD_REMOVE "Software\Microsoft\Windows\CurrentVersion\Uninstall\${FILE_NAME}"
 !define Python27 "python-2.7.7.msi"
-!define PyPIP "https://raw.github.com/pypa/pip/master/contrib/get-pip.py"
+!define PyPIP "get-pip.py"
 !define IntelHex "http://www.bialix.com/intelhex/intelhex-1.5.zip"
 !define PySIDE "http://download.qt-project.org/official_releases/pyside/PySide-1.2.1.win32-py2.7.exe"
 !define pinguino-ide "https://github.com/PinguinoIDE/pinguino-ide/archive/master.zip"
@@ -112,9 +112,8 @@ LangString msg_your_system_is ${LANG_SPANISH} "Tu Sistema Operativo es al menos"
 LangString msg_installing_drivers ${LANG_ENGLISH} "Installing the Pinguino Project device drivers"
 LangString msg_installing_drivers ${LANG_SPANISH} "Instalando los controladores para el dispositivo Pinguino Project"
 
-;--------------------------------
-;Installer Sections
-
+;------------------------------------------------------------------------
+; Installer Sections
 Section "Install"
 
   ;Default installation folder
@@ -128,6 +127,9 @@ Section "Install"
 
   ; Detect and install Python...
   Call InstallPython
+
+  ; Detect and install Python dependencies...
+  Call InstallPythonDeps
 
   ;Copy files...
   ;Call InstallFiles
@@ -146,9 +148,8 @@ Section "Install"
 
 SectionEnd
 
-;--------------------------------
-;Uninstaller Section
-
+;------------------------------------------------------------------------
+; Uninstaller Section
 Section "Uninstall"
 
   ;Tipo de instalacion: AllUsers.
@@ -166,12 +167,10 @@ Section "Uninstall"
 
 SectionEnd
 
-;---------------------------------
-; User Functions
-
+;------------------------------------------------------------------------
+; Python v2.7 detection and installation routine.
 Function InstallPython
-  ;------------------------------------------------------------------------
-  ; Python v2.7 detection and installation routine.
+
   IfFileExists "C:\Python27\python.exe" PythonAllreadyInstalled +1
   DetailPrint "Python v2.7 $(msg_not_detected)"
   Sleep 5000
@@ -186,64 +185,67 @@ Function InstallPython
   PythonAllreadyInstalled:
 FunctionEnd
 
+;------------------------------------------------------------------------
+; Detect and install Python dependencies.
+Function InstallPythonDeps
+
+	; PIP module detection and installation routine.
+	PyPIP:
+		IfFileExists "C:\Python27\Scripts\pip.exe" Wheel +1
+		DetailPrint "PyPIP $(msg_not_detected)"
+		Sleep 5000
+		SetOutPath "$TEMP"
+		File "..\${PyPIP}"
+		ExecWait '"C:\Python27\python" "$TEMP\get-pip.py"' $0
+		${if} $0 != "0"
+			Abort "PyPIP $(msg_not_installed) $0!"
+		${endif}
+
+	; Wheel module detection and installation routine.
+	Wheel:
+		IfFileExists "C:\Python27\Scripts\wheel.exe" Soup4 +1
+		DetailPrint "Wheel $(msg_not_detected)"
+		nsExec::Exec '"C:\Python27\Scripts\pip.exe" install wheel'
+		Pop $R0
+		${if} $R0 != "0"
+			Abort "Wheel $(msg_not_installed) $R0!"
+		${endif}
+
+	; BeautifullSoup4 module detection and installation routine.
+	Soup4:
+		IfFileExists "C:\Python27\Lib\site-packages\bs4\__init__.py" GITpython +1
+		DetailPrint "BeautifullSoup4 $(msg_not_detected)"
+		nsExec::Exec '"C:\Python27\Scripts\pip.exe" install beautifulsoup4'
+		Pop $R0
+		${if} $R0 != "0"
+			Abort "beautifulsoup4 $(msg_not_installed) $R0!"
+		${endif}
+
+	; GIT for Python module detection and installation routine.
+	GITpython:
+		IfFileExists "C:\Python27\Lib\site-packages\git\__init__.py" PyUSB +1
+		DetailPrint "GITpython $(msg_not_detected)"
+		nsExec::Exec '"C:\Python27\Scripts\pip.exe" install gitpython'
+		Pop $R0
+		${if} $R0 != "0"
+			Abort "GIT-Python $(msg_not_installed) $R0!"
+		${endif}
+	
+	; PyUSB module detection and installation routine.
+	PyUSB:
+		IfFileExists "C:\Python27\Lib\site-packages\usb\__init__.py" PythonDepsAllreadyInstalled +1
+		DetailPrint "PyUSB $(msg_not_detected)"
+		nsExec::Exec '"C:\Python27\Scripts\pip.exe" install pyusb==1.0.0b1'
+		Pop $R0
+		${if} $R0 != "0"
+			Abort "PyUSB $(msg_not_installed) $R0!"
+		${endif}
+	
+	PythonDepsAllreadyInstalled:
+FunctionEnd
+
+;------------------------------------------------------------------------
 Function DeleteMeWhenFinishDevelop
-  ;------------------------------------------------------------------------
-    PyPIP:
-    ; PyPIP module detection and installation routine.
-    IfFileExists "C:\Python27\Scripts\pip.exe" Wheel +1
-    DetailPrint "PyPIP $(msg_not_detected)"
-    DetailPrint $(msg_download_and_install)
-    Sleep 5000
-    inetc::get ${PyPIP} $EXEDIR\get-pip.py
-    Pop $R0
-    StrCmp $R0 "OK" +2
-    Abort "PyPIP $(msg_download_error) $R0!"
-    DetailPrint "PyPIP $(msg_download_complete)"
-    ExecWait '"C:\Python27\python" "$EXEDIR\get-pip.py"' $0
-    ${if} $0 != "0"
-      Abort "PyPIP $(msg_not_installed) $0!"
-    ${endif}
-    DetailPrint "PyPIP $(msg_installed)"
-
-  Wheel:
-    ; Wheel module detection and installation routine.
-    IfFileExists "C:\Python27\Scripts\wheel.exe" Soup4 +1
-    nsExec::Exec '"C:\Python27\Scripts\pip.exe" install wheel'
-    Pop $R0
-    ${if} $R0 != "0"
-      Abort "Wheel $(msg_not_installed) $R0!"
-    ${endif}
-    DetailPrint "wheel $(msg_installed)"
-
-  Soup4:
-    ; BeautifullSoup4 module detection and installation routine.
-    IfFileExists "C:\Python27\Lib\site-packages\bs4\__init__.py" GITpython +1
-    nsExec::Exec '"C:\Python27\Scripts\pip.exe" install beautifulsoup4'
-    Pop $R0
-    ${if} $R0 != "0"
-      Abort "beautifulsoup4 $(msg_not_installed) $R0!"
-    ${endif}
-    DetailPrint "beautifulsoup4 $(msg_installed)"
-
-  GITpython:
-    ; python-git module detection and installation routine.
-    IfFileExists "C:\Python27\Lib\site-packages\git\__init__.py" PyUSB +1
-    nsExec::Exec '"C:\Python27\Scripts\pip.exe" install gitpython'
-    Pop $R0
-    ${if} $R0 != "0"
-      Abort "GIT-Python $(msg_not_installed) $R0!"
-    ${endif}
-    DetailPrint "GIT-Python $(msg_installed)"
-
-  PyUSB:
-    ; PyUSB module detection and installation routine.
-    IfFileExists "C:\Python27\Lib\site-packages\usb\__init__.py" PySIDE +1
-    nsExec::Exec '"C:\Python27\Scripts\pip.exe" install pyusb==1.0.0b1'
-    Pop $R0
-    ${if} $R0 != "0"
-      Abort "PyUSB $(msg_not_installed) $R0!"
-    ${endif}
-    DetailPrint "PyUSB $(msg_installed)"
 
   PySIDE:
     ; PySIDE libraries detection and installation routine.
