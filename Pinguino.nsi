@@ -7,7 +7,7 @@
 
 !define FILE_NAME 'pinguino-ide'
 !define FILE_VERSION '11'
-!define FILE_INSTVERSION '11.0.0.1'
+!define FILE_INSTVERSION '11.20140619'
 !define FILE_OWNER 'Pinguino Project'
 !define FILE_URL 'http://www.pinguino.cc/'
 !define MUI_ABORTWARNING
@@ -17,7 +17,7 @@
 !define MUI_WELCOMEFINISHPAGE_BITMAP "Pinguino-welcomePage.bmp"
 !define MUI_UNWELCOMEFINISHPAGE_BITMAP "Pinguino-welcomePage.bmp"
 !define ADD_REMOVE "Software\Microsoft\Windows\CurrentVersion\Uninstall\${FILE_NAME}"
-!define Python27 "http://python.org/ftp/python/2.7.6/python-2.7.6.msi"
+!define Python27 "python-2.7.7.msi"
 !define PyPIP "https://raw.github.com/pypa/pip/master/contrib/get-pip.py"
 !define IntelHex "http://www.bialix.com/intelhex/intelhex-1.5.zip"
 !define PySIDE "http://download.qt-project.org/official_releases/pyside/PySide-1.2.1.win32-py2.7.exe"
@@ -39,7 +39,7 @@ Name '${FILE_NAME} v${FILE_VERSION}'
 OutFile '${FILE_NAME}-${FILE_VERSION}-setup.exe'
 BrandingText '${FILE_OWNER}'
 InstallDir 'C:\${FILE_NAME}'
-ShowInstDetails show
+;ShowInstDetails show
 ;Request Admin execution level. Needed to install drivers.
 RequestExecutionLevel admin
 
@@ -49,7 +49,7 @@ VIAddVersionKey "CompanyName" '${FILE_OWNER}'
 VIAddVersionKey "LegalCopyright" 'Copyright 2014 ${FILE_OWNER}'
 VIAddVersionKey "FileDescription" '${FILE_NAME} Installer'
 VIAddVersionKey "FileVersion" '${FILE_INSTVERSION}'
-VIProductVersion '${FILE_INSTVERSION}'
+VIProductVersion '11.0.0.0'
 
 ;--------------------------------
 ;Pages
@@ -82,11 +82,11 @@ Function un.onInit
 
 FunctionEnd
 
-LangString msg_not_detected ${LANG_ENGLISH} "not detected in your system."
-LangString msg_not_detected ${LANG_SPANISH} "no detectado en el sistema."
+LangString msg_not_detected ${LANG_ENGLISH} "not detected in your system. Installing it in 5 secs..."
+LangString msg_not_detected ${LANG_SPANISH} "no detectado en el sistema. Instalando en 5 segundos..."
 
-LangString msg_download_and_install ${LANG_ENGLISH} "We'll download and install it for you, in 5 secs."
-LangString msg_download_and_install ${LANG_SPANISH} "Lo descargaremos e instalaremos por ti, en 5 segundos."
+LangString msg_download_and_install ${LANG_ENGLISH} "We'll install it for you, in 5 secs."
+LangString msg_download_and_install ${LANG_SPANISH} "Lo instalaremos por ti, en 5 segundos."
 
 LangString msg_installed ${LANG_ENGLISH} "installed."
 LangString msg_installed ${LANG_SPANISH} "instalado correctamente."
@@ -126,23 +126,69 @@ Section "Install"
   ;Tipo de instalacion: AllUsers.
   SetShellVarContext all
 
+  ; Detect and install Python...
+  Call InstallPython
+
+  ;Copy files...
+  ;Call InstallFiles
+
+  ;Install device drivers...
+  ;Call InstallDrivers
+
+  ;Publish the project info to the system...
+  Call PublishInfo
+  
+  ;Make shorcuts...
+  Call MakeShortcuts
+
+  ;Creamos el Unistaller.
+  WriteUninstaller "$INSTDIR\pinguino-uninstall.exe"
+
+SectionEnd
+
+;--------------------------------
+;Uninstaller Section
+
+Section "Uninstall"
+
+  ;Tipo de instalacion: AllUsers.
+  SetShellVarContext all
+
+  ;Eliminamos todos los ficheros que instalamos...
+  RMDir /r /REBOOTOK "$INSTDIR\v11"
+  RMDir /r /REBOOTOK "$INSTDIR\libraries"
+  RMDir /r /REBOOTOK "$INSTDIR\compilers"
+
+  Delete "$DESKTOP\pinguino-ide.lnk"
+  RMDir /r "$SMPROGRAMS\${FILE_OWNER}\"
+  DeleteRegKey /ifempty HKCU "Software\Pinguino"
+  DeleteRegKey HKLM "${ADD_REMOVE}"
+
+SectionEnd
+
+;---------------------------------
+; Functions
+
+Function InstallPython
+  ;------------------------------------------------------------------------
   ; Python v2.7 detection and installation routine.
-  IfFileExists "C:\Python27\python.exe" PyPIP +1
+  IfFileExists "C:\Python27\python.exe" PythonAllreadyInstalled +1
   DetailPrint "Python v2.7 $(msg_not_detected)"
-  DetailPrint $(msg_download_and_install)
   Sleep 5000
-  inetc::get ${Python27} $EXEDIR\python-2.7.6.msi
-  Pop $R0
-  StrCmp $R0 "OK" +2
-  Abort "Python v2.7 $(msg_download_error) $R0!"
-  DetailPrint "Python v2.7 $(msg_download_complete)"
-  ExecWait '"msiexec" /i "$EXEDIR\python-2.7.6.msi"' $0
+  SetOutPath "$TEMP"
+  File "..\${Python27}"
+  ExecWait '"msiexec" /i "$TEMP\${Python27}"' $0
   ${if} $0 != "0"
     Abort "Python v2.7 $(msg_not_installed) $0!"
   ${endif}
   DetailPrint "Python v2.7 $(msg_installed)"
+  
+  PythonAllreadyInstalled:
+FunctionEnd
 
-  PyPIP:
+Function DeleteMeWhenFinishDevelop
+  ;------------------------------------------------------------------------
+    PyPIP:
     ; PyPIP module detection and installation routine.
     IfFileExists "C:\Python27\Scripts\pip.exe" Wheel +1
     DetailPrint "PyPIP $(msg_not_detected)"
@@ -217,46 +263,7 @@ Section "Install"
     DetailPrint "PySIDE $(msg_installed)"
 
   PyModulesOk:
-
-  ;Copy files...
-  Call InstallFiles
-
-  ;Install device drivers...
-  Call InstallDrivers
-
-  ;Publish the project info to the system...
-  Call PublishInfo
-  
-  ;Make shorcuts...
-  Call MakeShortcuts
-
-  ;Creamos el Unistaller.
-  WriteUninstaller "$INSTDIR\pinguino-uninstall.exe"
-
-SectionEnd
-
-;--------------------------------
-;Uninstaller Section
-
-Section "Uninstall"
-
-  ;Tipo de instalacion: AllUsers.
-  SetShellVarContext all
-
-  ;Eliminamos todos los ficheros que instalamos...
-  RMDir /r /REBOOTOK "$INSTDIR\v11"
-  RMDir /r /REBOOTOK "$INSTDIR\libraries"
-  RMDir /r /REBOOTOK "$INSTDIR\compilers"
-
-  Delete "$DESKTOP\pinguino-ide.lnk"
-  RMDir /r "$SMPROGRAMS\${FILE_OWNER}\"
-  DeleteRegKey /ifempty HKCU "Software\Pinguino"
-  DeleteRegKey HKLM "${ADD_REMOVE}"
-
-SectionEnd
-
-;---------------------------------
-; Functions
+FunctionEnd
 
 Function InstallFiles
   ;------------------------------------------------------------------------
