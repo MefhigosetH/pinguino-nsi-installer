@@ -22,7 +22,7 @@
 !define PySide "PySide-1.2.2.win32-py2.7.exe"
 !define pinguino-ide "pinguino-ide-master.zip"
 !define pinguino-libraries "pinguino-libraries.zip"
-!define pinguino-compilers "https://github.com/PinguinoIDE/pinguino-compilers/releases/download/2014.02/win32.zip"
+!define pinguino-compilers "pinguino-compilers.zip"
 
 ;--------------------------------
 ;Includes
@@ -138,6 +138,9 @@ Section "Install"
 
   ;Install pinguino-libraries package...
   Call InstallPinguinoLibraries
+
+  ;Install pinguino-compilers package...
+  Call InstallPinguinoCompilers
 
   ;Install device drivers...
   ;Call InstallDrivers
@@ -331,86 +334,21 @@ Function InstallPinguinoLibraries
 	RMDir /r "$TEMP\pinguino-libraries"
 FunctionEnd
 
-Function InstallFiles
-  ;------------------------------------------------------------------------
-  ;Try to download and install pinguino-libraries repo files from GitHub...
-  DetailPrint "pinguino-libraries $(msg_not_detected)"
-  DetailPrint $(msg_download_and_install)
-  Sleep 5000
+;------------------------------------------------------------------------
+; pinguino-compilers installation routine.
+Function InstallPinguinoCompilers
 
-  IfFileExists "$EXEDIR\pinguino-libraries.zip" +6 +1
-  inetc::get ${pinguino-libraries} "$EXEDIR\pinguino-libraries.zip"
-  Pop $R0
-  StrCmp $R0 "OK" +2
-  Abort "pinguino-libraries $(msg_download_error) $R0!"
-  DetailPrint "pinguino-libraries $(msg_download_complete)"
+	DetailPrint "pinguino-compilers $(msg_not_detected)"
+	SetOutPath "$TEMP"
+	File "..\${pinguino-compilers}"
 
-  ClearErrors
-  ZipDLL::extractall "$EXEDIR\pinguino-libraries.zip" "$EXEDIR"
-  IfErrors 0 +2
-    Abort "$(msg_error_while_extracting) pinguino-libraries.zip"
+	ClearErrors
+	CreateDirectory "$INSTDIR\compilers"
+	ZipDLL::extractall "$TEMP\${pinguino-compilers}" "$INSTDIR\compilers"
+	IfErrors 0 +2
+		Abort "$(msg_error_while_extracting) ${pinguino-compilers}"
 
-  ClearErrors
-  CreateDirectory "$INSTDIR\libraries\p8"
-  CopyFiles "$EXEDIR\pinguino-libraries-2014.02\p8\*.*" "$INSTDIR\libraries\p8"
-  IfErrors 0 +2
-    Abort "pinguino-libraries.zip: $(msg_error_while_copying) p8"
-
-  ClearErrors
-  CreateDirectory "$INSTDIR\libraries\p32"
-  CopyFiles "$EXEDIR\pinguino-libraries-2014.02\p32\*.*" "$INSTDIR\libraries\p32"
-  IfErrors 0 +2
-    Abort "pinguino-libraries.zip: $(msg_error_while_copying) p32"
-
-  ClearErrors
-  CreateDirectory "$INSTDIR\v${FILE_VERSION}\examples"
-  CopyFiles "$EXEDIR\pinguino-libraries-2014.02\examples\*.*" "$INSTDIR\v${FILE_VERSION}\examples"
-  IfErrors 0 +2
-    Abort "pinguino-libraries.zip: $(msg_error_while_copying) examples"
-
-  ClearErrors
-  CreateDirectory "$INSTDIR\v${FILE_VERSION}\graphical_examples"
-  CopyFiles "$EXEDIR\pinguino-libraries-2014.02\graphical_examples\*.*" "$INSTDIR\v${FILE_VERSION}\graphical_examples"
-  IfErrors 0 +2
-    Abort "pinguino-libraries.zip: $(msg_error_while_copying) graphical_examples"
-
-  ClearErrors
-  CreateDirectory "$INSTDIR\v${FILE_VERSION}\source"
-  CopyFiles "$EXEDIR\pinguino-libraries-2014.02\source\*.*" "$INSTDIR\v${FILE_VERSION}\source"
-  IfErrors 0 +2
-    Abort "pinguino-libraries.zip: $(msg_error_while_copying) source"
-
-  RMDir /r "$EXEDIR\pinguino-libraries-2014.02"
-  DetailPrint "pinguino-libraries $(msg_installed)"
-
-  ;------------------------------------------------------------------------
-  ;Try to download and install pinguino-compilers repo files from GitHub...
-  DetailPrint "pinguino-compilers $(msg_not_detected)"
-  DetailPrint $(msg_download_and_install)
-  Sleep 5000
-
-  IfFileExists "$EXEDIR\pinguino-compilers.zip" +6 +1
-  inetc::get ${pinguino-compilers} "$EXEDIR\pinguino-compilers.zip"
-  Pop $R0
-  StrCmp $R0 "OK" +2
-  Abort "pinguino-compilers $(msg_download_error) $R0!"
-  DetailPrint "pinguino-compilers $(msg_download_complete)"
-
-  ClearErrors
-  ZipDLL::extractall "$EXEDIR\pinguino-compilers.zip" "$EXEDIR"
-  IfErrors 0 +2
-    Abort "$(msg_error_while_extracting) pinguino-compilers.zip"
-
-  ClearErrors
-  CreateDirectory "$INSTDIR\compilers"
-  CopyFiles "$EXEDIR\win32\*.*" "$INSTDIR\compilers"
-  IfErrors 0 +2
-    Abort "pinguino-compilers.zip: $(msg_error_while_copying) compilers"
-
-  RMDir /r "$EXEDIR\win32"
-  DetailPrint "pinguino-compilers $(msg_installed)"
-
-  File "/oname=$INSTDIR\v${FILE_VERSION}\pinguino-logo-v2.ico" pinguino-logo-v2.ico
+	Delete "$TEMP\${pinguino-compilers}"
 FunctionEnd
 
 Function PublishInfo
@@ -428,6 +366,7 @@ FunctionEnd
 Function MakeShortcuts
   ;Make shortcuts into desktop and start menu to our program...
   DetailPrint "MakeShortcuts begin..."
+  File "/oname=$INSTDIR\v${FILE_VERSION}\pinguino-logo-v2.ico" pinguino-logo-v2.ico
   CreateShortCut "$DESKTOP\pinguino-ide.lnk" "$INSTDIR\v${FILE_VERSION}\pinguino.bat" "" "$INSTDIR\v${FILE_VERSION}\pinguino-logo-v2.ico"
   CreateDirectory "$SMPROGRAMS\${FILE_OWNER}\"
   CreateShortCut "$SMPROGRAMS\${FILE_OWNER}\pinguino-ide.lnk" "$INSTDIR\v${FILE_VERSION}\pinguino.bat" "" "$INSTDIR\v${FILE_VERSION}\pinguino-logo-v2.ico"
