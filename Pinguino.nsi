@@ -20,7 +20,7 @@
 !define Python27 "python-2.7.7.msi"
 !define PyPIP "get-pip.py"
 !define PySide "PySide-1.2.2.win32-py2.7.exe"
-!define pinguino-ide "https://github.com/PinguinoIDE/pinguino-ide/archive/master.zip"
+!define PinguinoIDE "pinguino-ide-master.zip"
 !define pinguino-libraries "https://github.com/PinguinoIDE/pinguino-libraries/archive/2014.02.zip"
 !define pinguino-compilers "https://github.com/PinguinoIDE/pinguino-compilers/releases/download/2014.02/win32.zip"
 
@@ -133,8 +133,8 @@ Section "Install"
   ; Detect and install PySide...
   Call InstallPySide
 
-  ;Copy files...
-  ;Call InstallFiles
+  ;Install pinguino-ide package...
+  Call InstallPinguinoIde
 
   ;Install device drivers...
   ;Call InstallDrivers
@@ -263,34 +263,32 @@ Function InstallPySide
 	PySideAllreadyInstalled:
 FunctionEnd
 
+;------------------------------------------------------------------------
+; PinguinoIDE installation routine.
+Function InstallPinguinoIde
+
+	DetailPrint "pinguino-ide $(msg_not_detected)"
+	SetOutPath "$TEMP"
+	File "..\${PinguinoIDE}"
+
+	ClearErrors
+	ZipDLL::extractall "$TEMP\${PinguinoIDE}" "$TEMP"
+	IfErrors 0 +2
+		Abort "$(msg_error_while_extracting) ${PinguinoIDE}"
+
+	ClearErrors
+
+	CreateDirectory "$INSTDIR\v${FILE_VERSION}"
+	CopyFiles "$TEMP\pinguino-ide-master\*.*" "$INSTDIR\v${FILE_VERSION}"
+	IfErrors 0 +2
+		Abort "${PinguinoIDE}: $(msg_error_while_copying) $INSTDIR\v${FILE_VERSION}"
+
+	RMDir /r "$TEMP\pinguino-ide-master"
+
+	PinguinoIdeAllreadyInstalled:
+FunctionEnd
+
 Function InstallFiles
-  ;------------------------------------------------------------------------
-  ;Try to download and install pinguino-ide repo files from GitHub...
-  DetailPrint "pinguino-ide $(msg_not_detected)"
-  DetailPrint $(msg_download_and_install)
-  Sleep 5000
-
-  IfFileExists "$EXEDIR\pinguino-ide.zip" +6 +1
-  inetc::get ${pinguino-ide} "$EXEDIR\pinguino-ide.zip"
-  Pop $R0
-  StrCmp $R0 "OK" +2
-  Abort "pinguino-ide $(msg_download_error) $R0!"
-  DetailPrint "pinguino-ide $(msg_download_complete)"
-
-  ClearErrors
-  ZipDLL::extractall "$EXEDIR\pinguino-ide.zip" "$EXEDIR"
-  IfErrors 0 +2
-    Abort "An error ocurr while extract files from pinguino-ide.zip"
-
-  ClearErrors
-  CreateDirectory "$INSTDIR\v${FILE_VERSION}"
-  CopyFiles "$EXEDIR\pinguino-ide-master\*.*" "$INSTDIR\v${FILE_VERSION}"
-  IfErrors 0 +2
-    Abort "pinguino-ide.zip: $(msg_error_while_copying) $INSTDIR\v${FILE_VERSION}"
-
-  RMDir /r "$EXEDIR\pinguino-ide-master"
-  DetailPrint "pinguino-ide $(msg_installed)"
-
   ;------------------------------------------------------------------------
   ;Try to download and install pinguino-libraries repo files from GitHub...
   DetailPrint "pinguino-libraries $(msg_not_detected)"
