@@ -21,7 +21,7 @@
 !define PyPIP "get-pip.py"
 !define PySide "PySide-1.2.2.win32-py2.7.exe"
 !define pinguino-ide "pinguino-ide-master.zip"
-!define pinguino-libraries "https://github.com/PinguinoIDE/pinguino-libraries/archive/2014.02.zip"
+!define pinguino-libraries "pinguino-libraries.zip"
 !define pinguino-compilers "https://github.com/PinguinoIDE/pinguino-compilers/releases/download/2014.02/win32.zip"
 
 ;--------------------------------
@@ -135,6 +135,9 @@ Section "Install"
 
   ;Install pinguino-ide package...
   Call InstallPinguinoIde
+
+  ;Install pinguino-libraries package...
+  Call InstallPinguinoLibraries
 
   ;Install device drivers...
   ;Call InstallDrivers
@@ -286,6 +289,46 @@ Function InstallPinguinoIde
 	RMDir /r "$TEMP\pinguino-ide-master"
 
 	PinguinoIdeAllreadyInstalled:
+FunctionEnd
+
+;--------------------------------------------------------------------------
+; pinguino-libraries installation routine.
+Function InstallPinguinoLibraries
+
+	DetailPrint "pinguino-libraries $(msg_not_detected)"
+	SetOutPath "$TEMP"
+	File "..\${pinguino-libraries}"
+
+	ClearErrors
+	ZipDLL::extractall "$TEMP\${pinguino-libraries}" "$TEMP"
+	IfErrors 0 +2
+		Abort "$(msg_error_while_extracting) ${pinguino-libraries}"
+
+	ClearErrors
+	CreateDirectory "$INSTDIR\libraries\p8"
+	CopyFiles "$TEMP\pinguino-libraries\p8\*.*" "$INSTDIR\libraries\p8"
+	IfErrors 0 +2
+		Abort "${pinguino-libraries}: $(msg_error_while_copying) p8"
+
+	ClearErrors
+	CreateDirectory "$INSTDIR\v${FILE_VERSION}\examples"
+	CopyFiles "$TEMP\pinguino-libraries\examples\*.*" "$INSTDIR\v${FILE_VERSION}\examples"
+	IfErrors 0 +2
+		Abort "${pinguino-libraries}: $(msg_error_while_copying) examples"
+
+	ClearErrors
+	CreateDirectory "$INSTDIR\v${FILE_VERSION}\graphical_examples"
+	CopyFiles "$TEMP\pinguino-libraries\graphical_examples\*.*" "$INSTDIR\v${FILE_VERSION}\graphical_examples"
+	IfErrors 0 +2
+		Abort "${pinguino-libraries}: $(msg_error_while_copying) graphical_examples"
+
+	ClearErrors
+	CreateDirectory "$INSTDIR\v${FILE_VERSION}\source"
+	CopyFiles "$TEMP\pinguino-libraries\source\*.*" "$INSTDIR\v${FILE_VERSION}\source"
+	IfErrors 0 +2
+		Abort "${pinguino-libraries}: $(msg_error_while_copying) source"
+
+	RMDir /r "$TEMP\pinguino-libraries"
 FunctionEnd
 
 Function InstallFiles
