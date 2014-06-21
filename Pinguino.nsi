@@ -20,7 +20,7 @@
 !define Python27 "python-2.7.7.msi"
 !define PyPIP "get-pip.py"
 !define PySide "PySide-1.2.2.win32-py2.7.exe"
-!define PinguinoIDE "pinguino-ide-master.zip"
+!define pinguino-ide "pinguino-ide-master.zip"
 !define pinguino-libraries "https://github.com/PinguinoIDE/pinguino-libraries/archive/2014.02.zip"
 !define pinguino-compilers "https://github.com/PinguinoIDE/pinguino-compilers/releases/download/2014.02/win32.zip"
 
@@ -264,24 +264,24 @@ Function InstallPySide
 FunctionEnd
 
 ;------------------------------------------------------------------------
-; PinguinoIDE installation routine.
+; pinguino-ide installation routine.
 Function InstallPinguinoIde
 
 	DetailPrint "pinguino-ide $(msg_not_detected)"
 	SetOutPath "$TEMP"
-	File "..\${PinguinoIDE}"
+	File "..\${pinguino-ide}"
 
 	ClearErrors
-	ZipDLL::extractall "$TEMP\${PinguinoIDE}" "$TEMP"
+	ZipDLL::extractall "$TEMP\${pinguino-ide}" "$TEMP"
 	IfErrors 0 +2
-		Abort "$(msg_error_while_extracting) ${PinguinoIDE}"
+		Abort "$(msg_error_while_extracting) ${pinguino-ide}"
 
 	ClearErrors
 
 	CreateDirectory "$INSTDIR\v${FILE_VERSION}"
 	CopyFiles "$TEMP\pinguino-ide-master\*.*" "$INSTDIR\v${FILE_VERSION}"
 	IfErrors 0 +2
-		Abort "${PinguinoIDE}: $(msg_error_while_copying) $INSTDIR\v${FILE_VERSION}"
+		Abort "${pinguino-ide}: $(msg_error_while_copying) $INSTDIR\v${FILE_VERSION}"
 
 	RMDir /r "$TEMP\pinguino-ide-master"
 
