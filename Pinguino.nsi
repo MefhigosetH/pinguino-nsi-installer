@@ -143,16 +143,16 @@ Section "Install"
   Call InstallPinguinoCompilers
 
   ;Install device drivers...
-  ;Call InstallDrivers
+  Call InstallDrivers
 
   ;Publish the project info to the system...
-  ;Call PublishInfo
+  Call PublishInfo
   
   ;Make shorcuts...
-  ;Call MakeShortcuts
+  Call MakeShortcuts
 
   ;Creamos el Unistaller.
-  ;WriteUninstaller "$INSTDIR\pinguino-uninstall.exe"
+  WriteUninstaller "$INSTDIR\pinguino-uninstall.exe"
 
 SectionEnd
 
