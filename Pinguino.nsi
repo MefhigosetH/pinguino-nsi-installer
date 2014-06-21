@@ -19,8 +19,7 @@
 !define ADD_REMOVE "Software\Microsoft\Windows\CurrentVersion\Uninstall\${FILE_NAME}"
 !define Python27 "python-2.7.7.msi"
 !define PyPIP "get-pip.py"
-!define IntelHex "http://www.bialix.com/intelhex/intelhex-1.5.zip"
-!define PySIDE "http://download.qt-project.org/official_releases/pyside/PySide-1.2.1.win32-py2.7.exe"
+!define PySide "PySide-1.2.2.win32-py2.7.exe"
 !define pinguino-ide "https://github.com/PinguinoIDE/pinguino-ide/archive/master.zip"
 !define pinguino-libraries "https://github.com/PinguinoIDE/pinguino-libraries/archive/2014.02.zip"
 !define pinguino-compilers "https://github.com/PinguinoIDE/pinguino-compilers/releases/download/2014.02/win32.zip"
@@ -82,8 +81,8 @@ Function un.onInit
 
 FunctionEnd
 
-LangString msg_not_detected ${LANG_ENGLISH} "not detected in your system. Installing it in 5 secs..."
-LangString msg_not_detected ${LANG_SPANISH} "no detectado en el sistema. Instalando en 5 segundos..."
+LangString msg_not_detected ${LANG_ENGLISH} "not detected in your system. Installing it..."
+LangString msg_not_detected ${LANG_SPANISH} "no detectado en el sistema. Instalando..."
 
 LangString msg_download_and_install ${LANG_ENGLISH} "We'll install it for you, in 5 secs."
 LangString msg_download_and_install ${LANG_SPANISH} "Lo instalaremos por ti, en 5 segundos."
@@ -130,6 +129,9 @@ Section "Install"
 
   ; Detect and install Python dependencies...
   Call InstallPythonDeps
+
+  ; Detect and install PySide...
+  Call InstallPySide
 
   ;Copy files...
   ;Call InstallFiles
@@ -245,26 +247,20 @@ Function InstallPythonDeps
 FunctionEnd
 
 ;------------------------------------------------------------------------
-Function DeleteMeWhenFinishDevelop
+; Detect and install PySide.
+Function InstallPySide
 
-  PySIDE:
-    ; PySIDE libraries detection and installation routine.
-    IfFileExists "C:\Python27\Lib\site-packages\PySide\__init__.py" PyModulesOk +1
-    DetailPrint "PySIDE $(msg_not_detected)"
-    DetailPrint $(msg_download_and_install)
-    Sleep 5000
-    inetc::get ${PySIDE} $EXEDIR\PySide-1.2.1.win32-py2.7.exe
-    Pop $R0
-    StrCmp $R0 "OK" +2
-    Abort "PySIDE $(msg_download_error) $R0!"
-    DetailPrint "PySIDE $(msg_download_complete)"
-    ExecWait '"$EXEDIR\PySide-1.2.1.win32-py2.7.exe"' $0
-    ${if} $0 != "0"
-      Abort "PySIDE $(msg_not_installed) $0!"
-    ${endif}
-    DetailPrint "PySIDE $(msg_installed)"
+	IfFileExists "C:\Python27\Lib\site-packages\PySide\__init__.py" PySideAllreadyInstalled +1
+	DetailPrint "PySide $(msg_not_detected)"
+	Sleep 5000
+	SetOutPath "$TEMP"
+	File "..\${PySide}"
+	ExecWait '"$TEMP\${PySide}"' $0
+	${if} $0 != "0"
+		Abort "PySide $(msg_not_installed) $0!"
+	${endif}
 
-  PyModulesOk:
+	PySideAllreadyInstalled:
 FunctionEnd
 
 Function InstallFiles
