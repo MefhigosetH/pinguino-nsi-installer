@@ -185,7 +185,7 @@ Function InstallPython
   Sleep 5000
   SetOutPath "$TEMP"
   File "..\${Python27}"
-  ExecWait '"msiexec" /i "$TEMP\${Python27}"' $0
+  ExecWait '"msiexec" /passive /i "$TEMP\${Python27}"' $0
   ${if} $0 != "0"
     Abort "Python v2.7 $(msg_not_installed) $0!"
   ${endif}
