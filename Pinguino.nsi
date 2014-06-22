@@ -23,6 +23,7 @@
 !define pinguino-ide "pinguino-ide-master.zip"
 !define pinguino-libraries "pinguino-libraries.zip"
 !define pinguino-compilers "pinguino-compilers.zip"
+!define pinguino-compilers-32 "pinguino-compilers-32.zip"
 
 ;--------------------------------
 ;Includes
@@ -340,15 +341,23 @@ Function InstallPinguinoCompilers
 
 	DetailPrint "pinguino-compilers $(msg_not_detected)"
 	SetOutPath "$TEMP"
-	File "..\${pinguino-compilers}"
-
-	ClearErrors
 	CreateDirectory "$INSTDIR\compilers"
+
+	File "..\${pinguino-compilers}"
+	ClearErrors
 	ZipDLL::extractall "$TEMP\${pinguino-compilers}" "$INSTDIR\compilers"
 	IfErrors 0 +2
 		Abort "$(msg_error_while_extracting) ${pinguino-compilers}"
 
 	Delete "$TEMP\${pinguino-compilers}"
+
+	File "..\${pinguino-compilers-32}"
+	ClearErrors
+	ZipDLL::extractall "$TEMP\${pinguino-compilers-32}" "$INSTDIR\compilers"
+	IfErrors 0 +2
+		Abort "$(msg_error_while_extracting) ${pinguino-compilers-32}"
+
+	Delete "$TEMP\${pinguino-compilers-32}"
 FunctionEnd
 
 Function PublishInfo
