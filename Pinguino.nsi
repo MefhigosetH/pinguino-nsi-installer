@@ -190,6 +190,7 @@ Function InstallPython
     Abort "Python v2.7 $(msg_not_installed) $0!"
   ${endif}
   DetailPrint "Python v2.7 $(msg_installed)"
+  Delete "$TEMP\${Python27}"
   
   PythonAllreadyInstalled:
 FunctionEnd
@@ -209,6 +210,7 @@ Function InstallPythonDeps
 		${if} $0 != "0"
 			Abort "PyPIP $(msg_not_installed) $0!"
 		${endif}
+		Delete "$TEMP\${PyPIP}"
 
 	; Wheel module detection and installation routine.
 	Wheel:
@@ -266,6 +268,7 @@ Function InstallPySide
 	${if} $0 != "0"
 		Abort "PySide $(msg_not_installed) $0!"
 	${endif}
+	Delete "$TEMP\${PySide}"
 
 	PySideAllreadyInstalled:
 FunctionEnd
@@ -291,6 +294,7 @@ Function InstallPinguinoIde
 		Abort "${pinguino-ide}: $(msg_error_while_copying) $INSTDIR\v${FILE_VERSION}"
 
 	RMDir /r "$TEMP\pinguino-ide-master"
+	Delete "$TEMP\${pinguino-ide}"
 
 	PinguinoIdeAllreadyInstalled:
 FunctionEnd
@@ -333,6 +337,7 @@ Function InstallPinguinoLibraries
 		Abort "${pinguino-libraries}: $(msg_error_while_copying) source"
 
 	RMDir /r "$TEMP\pinguino-libraries"
+	Delete "$TEMP\${pinguino-libraries}"
 FunctionEnd
 
 ;------------------------------------------------------------------------
