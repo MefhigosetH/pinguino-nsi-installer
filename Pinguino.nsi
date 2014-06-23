@@ -69,8 +69,7 @@ VIProductVersion '11.0.0.0'
 
 !insertmacro MUI_LANGUAGE "English"
 !insertmacro MUI_LANGUAGE "Spanish"
-!insertmacro MUI_LANGUAGE "Português (Brasil)"
-
+!insertmacro MUI_LANGUAGE "PortugueseBR"
 
 Function .onInit
 
@@ -86,44 +85,43 @@ FunctionEnd
 
 LangString msg_not_detected ${LANG_ENGLISH} "not detected in your system. Installing it..."
 LangString msg_not_detected ${LANG_SPANISH} "no detectado en el sistema. Instalando..."
-LangString msg_not_detected ${LANG_SPANISH} "não foi detectado em seu sistema. Instalando..."
+LangString msg_not_detected ${LANG_PORTUGUESEBR} "não foi detectado em seu sistema. Instalando..."
 
 LangString msg_download_and_install ${LANG_ENGLISH} "We'll install it for you, in 5 secs."
 LangString msg_download_and_install ${LANG_SPANISH} "Lo instalaremos por ti, en 5 segundos."
-LangString msg_download_and_install ${LANG_SPANISH} "Nós instalaremos para você, em 5 segundos."
+LangString msg_download_and_install ${LANG_PORTUGUESEBR} "Nós instalaremos para você, em 5 segundos."
 
 LangString msg_installed ${LANG_ENGLISH} "installed."
 LangString msg_installed ${LANG_SPANISH} "instalado correctamente."
-LangString msg_installed ${LANG_SPANISH} "Instalado."
-
+LangString msg_installed ${LANG_PORTUGUESEBR} "Instalado."
 
 LangString msg_not_installed ${LANG_ENGLISH} "not installed. Error code was:"
 LangString msg_not_installed ${LANG_SPANISH} "no instalado. El error fue:"
-LangString msg_not_installed ${LANG_SPANISH} "não instalado. o erro foi:"
+LangString msg_not_installed ${LANG_PORTUGUESEBR} "não instalado. o erro foi:"
 
 LangString msg_download_complete ${LANG_ENGLISH} "download complete."
 LangString msg_download_complete ${LANG_SPANISH} "descargado correctamente."
-LangString msg_download_complete ${LANG_SPANISH} "download completo."
+LangString msg_download_complete ${LANG_PORTUGUESEBR} "download completo."
 
 LangString msg_download_error ${LANG_ENGLISH} "download failed. Error was:"
 LangString msg_download_error ${LANG_SPANISH} "no se pudo descargar. El error fue:"
-LangString msg_download_error ${LANG_SPANISH} "o download falhou. que pena!, o erro foi:"
+LangString msg_download_error ${LANG_PORTUGUESEBR} "o download falhou. que pena!, o erro foi:"
 
 LangString msg_error_while_extracting ${LANG_ENGLISH} "An error ocurr while extracting files from"
 LangString msg_error_while_extracting ${LANG_SPANISH} "Se ha producido un error mientras se descomprimia"
-LangString msg_error_while_extracting ${LANG_SPANISH} "Houve uma falha no processo de extração de arquivos."
+LangString msg_error_while_extracting ${LANG_PORTUGUESEBR} "Houve uma falha no processo de extração de arquivos."
 
 LangString msg_error_while_copying ${LANG_ENGLISH} "An error ocurr while copying files to"
 LangString msg_error_while_copying ${LANG_SPANISH} "Se ha producido un error mientras se copiaban los archivos en el directorio"
-LangString msg_error_while_copying ${LANG_ENGLISH} "Um erro ocorreu durante a copia de arquivos para o diretório"
+LangString msg_error_while_copying ${LANG_PORTUGUESEBR} "Um erro ocorreu durante a copia de arquivos para o diretório"
 
 LangString msg_your_system_is ${LANG_ENGLISH} "Your Operating System is at least"
 LangString msg_your_system_is ${LANG_SPANISH} "Tu Sistema Operativo es al menos"
-LangString msg_your_system_is ${LANG_SPANISH} "Seu sistema operacional é pelo menos"
+LangString msg_your_system_is ${LANG_PORTUGUESEBR} "Seu sistema operacional é pelo menos"
 
 LangString msg_installing_drivers ${LANG_ENGLISH} "Installing the Pinguino Project device drivers"
 LangString msg_installing_drivers ${LANG_SPANISH} "Instalando los controladores para el dispositivo Pinguino Project"
-LangString msg_installing_drivers ${LANG_SPANISH} "Instalando os controladores para o dispositivo do Projeto Pinguino"
+LangString msg_installing_drivers ${LANG_PORTUGUESEBR} "Instalando os controladores para o dispositivo do Projeto Pinguino"
 
 ;------------------------------------------------------------------------
 ; Installer Sections
