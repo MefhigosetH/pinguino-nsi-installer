@@ -435,35 +435,27 @@ Function InstallDrivers
 	${If} ${AtLeastWinVista}
 		; System is Microsoft Windows Vista or later...
 		StrCpy $os_version "Vista"
-		DetailPrint "$(msg_your_system_is) Microsoft Windows $os_version ($os_platform)."
-
-		; Pinguino device driver install routine...
-		nsExec::Exec '$INSTDIR\drivers\DPInst-$os_platform.exe /F /LM /SW /SA /PATH $INSTDIR\drivers\$os_version\'
-
-		; LibUSB libraries installation routine...
-		CopyFiles "$INSTDIR\drivers\LibUSB\$os_platform\libusb0.dll" "$SYSDIR\libusb0.dll"
-		CopyFiles "$INSTDIR\drivers\LibUSB\$os_platform\libusb0.sys" "$SYSDIR\drivers\libusb0.sys"
-		CopyFiles "$INSTDIR\drivers\LibUSB\$os_platform\testlibusb.exe" "$SYSDIR\testlibusb.exe"
 	${Else}
 		; System is Microsoft Windows XP...
 		StrCpy $os_version "XP"
-		DetailPrint "$(msg_your_system_is) Microsoft Windows $os_version ($os_platform)."
-
-		; Pinguino device driver install routine...
-		nsExec::Exec '$INSTDIR\drivers\DPInst-$os_platform.exe /F /LM /SW /SA /PATH $INSTDIR\drivers\$os_version\'
-
-		MessageBox MB_YESNO|MB_ICONQUESTION "$(do_you_want_install_device_drivers)" IDNO withoutBoard
-		MessageBox MB_USERICON|MB_OK "$(please_plug_in_your_board)"
-
-		; LibUSB libraries installation routine...
-		ExecWait '"$INSTDIR\drivers\LibUSB\${libusb-filter}"' $0
-		${if} $0 != "0"
-			Abort "LibUSB $(msg_not_installed) $0!"
-		${endif}
-		Return
-
-		withoutBoard:
-			MessageBox MB_ICONEXCLAMATION|MB_OK "$(remember_install_manually_later)"
 	${EndIf}
+
+	DetailPrint "$(msg_your_system_is) Microsoft Windows $os_version ($os_platform)."
+
+	; Pinguino device driver install routine...
+	nsExec::Exec '$INSTDIR\drivers\DPInst-$os_platform.exe /F /LM /SW /SA /PATH $INSTDIR\drivers\$os_version\'
+
+	MessageBox MB_YESNO|MB_ICONQUESTION "$(do_you_want_install_device_drivers)" IDNO withoutBoard
+	MessageBox MB_USERICON|MB_OK "$(please_plug_in_your_board)"
+
+	; LibUSB libraries installation routine...
+	ExecWait '"$INSTDIR\drivers\LibUSB\${libusb-filter}"' $0
+	${if} $0 != "0"
+		Abort "LibUSB $(msg_not_installed) $0!"
+	${endif}
+	Return
+
+	withoutBoard:
+		MessageBox MB_ICONEXCLAMATION|MB_OK "$(remember_install_manually_later)"
 
 FunctionEnd
