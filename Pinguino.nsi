@@ -1,8 +1,9 @@
-;----------------------------------------------------
+;------------------------------------------------------------------------------
 ;Pinguino IDE Installation Script
 ;Public Domain License 2014
 ;Coded by Victor Villarreal <mefhigoseth@gmail.com>
-;----------------------------------------------------
+;Translated to Portuguese-BR by Wagner de Queiroz <wagnerdequeiroz@gmail.com>
+;------------------------------------------------------------------------------
 ;Defines
 
 !define FILE_NAME 'pinguino-ide'
@@ -126,15 +127,15 @@ LangString msg_installing_drivers ${LANG_PORTUGUESEBR} "Instalando os controlado
 
 LangString do_you_want_install_device_drivers ${LANG_ENGLISH} "Do you want to install the device drivers for pinguino-board now?"
 LangString do_you_want_install_device_drivers ${LANG_SPANISH} "Deseas instalar los drivers para la placa Pinguino ahora?"
-LangString do_you_want_install_device_drivers ${LANG_PORTUGUESEBR} ""
+LangString do_you_want_install_device_drivers ${LANG_PORTUGUESEBR} "Você deseja instalar os Drivers para a placa do Pinguino Agora?"
 
 LangString please_plug_in_your_board ${LANG_ENGLISH} "Please, connect your board, press reset button and install the pre-installed drivers.\n When finish, press 'Ok'."
 LangString please_plug_in_your_board ${LANG_SPANISH} "Por favor, conecta la placa, presiona el boton de reset e instala los drivers pre-instalados.\n Al terminar, presiona 'Ok'."
-LangString please_plug_in_your_board ${LANG_PORTUGUESEBR} ""
+LangString please_plug_in_your_board ${LANG_PORTUGUESEBR} "Por favor, conecte a placa, pressione o botão de reset e siga as orientações do sistema.\n Quando terminar a instalação dos Drivers, Pressione OK."
 
 LangString remember_install_manually_later ${LANG_ENGLISH} "Rememeber install manually the ${libusb-filter} package after you connect your board first time."
 LangString remember_install_manually_later ${LANG_SPANISH} "Recuerda que deberas ejecutar el paquete ${libusb-filter} manualmente, luego de conectar la placa por primera vez."
-LangString remember_install_manually_later ${LANG_PORTUGUESEBR} ""
+LangString remember_install_manually_later ${LANG_PORTUGUESEBR} "Lembre-se de instalar manualmente o pacote ${libusb-filter}, após conectar a sua placa pela primeira vez. "
 
 ;------------------------------------------------------------------------
 ; Installer Sections
