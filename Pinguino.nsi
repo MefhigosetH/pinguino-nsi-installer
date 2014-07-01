@@ -24,6 +24,7 @@
 !define pinguino-libraries "pinguino-libraries.zip"
 !define pinguino-compilers "pinguino-compilers.zip"
 !define pinguino-compilers-32 "pinguino-compilers-32.zip"
+!define libusb-filter "libusb-win32-devel-filter-1.2.6.0"
 
 ;--------------------------------
 ;Includes
@@ -122,6 +123,18 @@ LangString msg_your_system_is ${LANG_PORTUGUESEBR} "Seu sistema operacional é p
 LangString msg_installing_drivers ${LANG_ENGLISH} "Installing the Pinguino Project device drivers"
 LangString msg_installing_drivers ${LANG_SPANISH} "Instalando los controladores para el dispositivo Pinguino Project"
 LangString msg_installing_drivers ${LANG_PORTUGUESEBR} "Instalando os controladores para o dispositivo do Projeto Pinguino"
+
+LangString do_you_want_install_device_drivers ${LANG_ENGLISH} "Do you want to install the device drivers for pinguino-board now?"
+LangString do_you_want_install_device_drivers ${LANG_SPANISH} "Deseas instalar los drivers para la placa Pinguino ahora?"
+LangString do_you_want_install_device_drivers ${LANG_PORTUGUESEBR} ""
+
+LangString please_plug_in_your_board ${LANG_ENGLISH} "Please, connect your board, press reset button and install the pre-installed drivers.\n When finish, press 'Ok'."
+LangString please_plug_in_your_board ${LANG_SPANISH} "Por favor, conecta la placa, presiona el boton de reset e instala los drivers pre-instalados.\n Al terminar, presiona 'Ok'."
+LangString please_plug_in_your_board ${LANG_PORTUGUESEBR} ""
+
+LangString remember_install_manually_later ${LANG_ENGLISH} "Rememeber install manually the ${libusb-filter} package after you connect your board first time."
+LangString remember_install_manually_later ${LANG_SPANISH} "Recuerda que deberas ejecutar el paquete ${libusb-filter} manualmente, luego de conectar la placa por primera vez."
+LangString remember_install_manually_later ${LANG_PORTUGUESEBR} ""
 
 ;------------------------------------------------------------------------
 ; Installer Sections
@@ -376,7 +389,10 @@ Function InstallPinguinoCompilers
 	Delete "$TEMP\${pinguino-compilers-32}"
 FunctionEnd
 
+;------------------------------------------------------------------------
+; Software installation info publish routine.
 Function PublishInfo
+
   ;Publish info for the "Add & Remove Software" system tool...
   DetailPrint "PublishInfo begin..."
   WriteRegStr HKCU "Software\Pinguino" "" "$INSTDIR\v${FILE_VERSION}"
@@ -388,7 +404,10 @@ Function PublishInfo
   WriteRegStr HKLM "${ADD_REMOVE}" "Publisher" "${FILE_OWNER}"
 FunctionEnd
 
+;------------------------------------------------------------------------
+; Software shortcuts install routine.
 Function MakeShortcuts
+
   ;Make shortcuts into desktop and start menu to our program...
   DetailPrint "MakeShortcuts begin..."
   File "/oname=$INSTDIR\v${FILE_VERSION}\pinguino-logo-v2.ico" pinguino-logo-v2.ico
@@ -397,41 +416,53 @@ Function MakeShortcuts
   CreateShortCut "$SMPROGRAMS\${FILE_OWNER}\pinguino-ide.lnk" "$INSTDIR\v${FILE_VERSION}\pinguino.bat" "" "$INSTDIR\v${FILE_VERSION}\pinguino-logo-v2.ico"
 FunctionEnd
 
+;------------------------------------------------------------------------
+; Pinguino device driver pre-installation and LibUSB routine.
 Function InstallDrivers
-  Var /GLOBAL os_platform
-  StrCpy $os_platform "32"
-  Var /GLOBAL os_version
 
-  DetailPrint "$(msg_installing_drivers)..."
+	DetailPrint "$(msg_installing_drivers)..."
+	SetOutPath "$INSTDIR\drivers"
+	File /r "..\drivers\*.*"
 
-  SetOutPath "$INSTDIR\drivers"
-  File /r "..\drivers\*.*"
+	Var /GLOBAL os_platform
+	StrCpy $os_platform "x86"
+	StrCmp $PROGRAMFILES $PROGRAMFILES64 +2
+	StrCpy $os_platform "amd64"
 
-  StrCmp $PROGRAMFILES $PROGRAMFILES64 +2
-  StrCpy $os_platform "64"
+	Var /GLOBAL os_version
 
-  ${If} ${AtLeastWinVista}
-    StrCpy $os_version "Vista"
+	${If} ${AtLeastWinVista}
+		; System is Microsoft Windows Vista or later...
+		StrCpy $os_version "Vista"
+		DetailPrint "$(msg_your_system_is) Microsoft Windows $os_version ($os_platform)."
 
-  ${Else}
-    StrCpy $os_version "XP"
+		; Pinguino device driver install routine...
+		nsExec::Exec '$INSTDIR\drivers\DPInst-$os_platform.exe /F /LM /SW /SA /PATH $INSTDIR\drivers\$os_version\'
 
-    ; LibUSB libraries detection and installation routine.
-    CopyFiles "$INSTDIR\drivers\Vista\x86\libusb0_x86.dll" "$SYSDIR\libusb0.dll"
-    CopyFiles "$INSTDIR\drivers\Vista\x86\libusb0.sys" "$SYSDIR\drivers\libusb0.sys"
-    CopyFiles "$INSTDIR\drivers\testlibusb.exe" "$SYSDIR\testlibusb.exe"
+		; LibUSB libraries installation routine...
+		CopyFiles "$INSTDIR\drivers\LibUSB\$os_platform\libusb0.dll" "$SYSDIR\libusb0.dll"
+		CopyFiles "$INSTDIR\drivers\LibUSB\$os_platform\libusb0.sys" "$SYSDIR\drivers\libusb0.sys"
+		CopyFiles "$INSTDIR\drivers\LibUSB\$os_platform\testlibusb.exe" "$SYSDIR\testlibusb.exe"
+	${Else}
+		; System is Microsoft Windows XP...
+		StrCpy $os_version "XP"
+		DetailPrint "$(msg_your_system_is) Microsoft Windows $os_version ($os_platform)."
 
-    nsExec::Exec '"$SYSDIR\testlibusb.exe"'
-    Pop $R0
-    ${if} $R0 != "0"
-      Abort "libUSB $(msg_not_installed) $R0!"
-    ${endif}
-      DetailPrint "libUSB $(msg_installed)"
+		; Pinguino device driver install routine...
+		nsExec::Exec '$INSTDIR\drivers\DPInst-$os_platform.exe /F /LM /SW /SA /PATH $INSTDIR\drivers\$os_version\'
 
-  ${EndIf}
+		MessageBox MB_YESNO|MB_ICONQUESTION "$(do_you_want_install_device_drivers)" IDNO withoutBoard
+		MessageBox MB_USERICON|MB_OK "$(please_plug_in_your_board)"
 
-  DetailPrint "$(msg_your_system_is) Microsoft Windows $os_version ($os_platform bits)."
-  DetailPrint "$INSTDIR\drivers\DPInst$os_platform.exe /LM /SW /PATH $INSTDIR\drivers\$os_version\"
-  nsExec::Exec '$INSTDIR\drivers\DPInst$os_platform.exe /LM /SW /PATH $INSTDIR\drivers\$os_version\'
-  Sleep 5000
+		; LibUSB libraries installation routine...
+		ExecWait '"$INSTDIR\drivers\LibUSB\${libusb-filter}"' $0
+		${if} $0 != "0"
+			Abort "LibUSB $(msg_not_installed) $0!"
+		${endif}
+		Return
+
+		withoutBoard:
+			MessageBox MB_ICONEXCLAMATION|MB_OK "$(remember_install_manually_later)"
+	${EndIf}
+
 FunctionEnd
