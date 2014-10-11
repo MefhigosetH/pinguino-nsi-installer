@@ -3,12 +3,13 @@
 ;Public Domain License 2014
 ;Coded by Victor Villarreal <mefhigoseth@gmail.com>
 ;Translated to Portuguese-BR by Wagner de Queiroz <wagnerdequeiroz@gmail.com>
+;Translated to Italian by Pasquale Fersini <basquale.fersini@gmail.com>
 ;------------------------------------------------------------------------------
 ;Defines
 
 !define FILE_NAME 'pinguino-ide'
 !define FILE_VERSION '11'
-!define FILE_INSTVERSION '11.20140619'
+!define FILE_INSTVERSION '${FILE_VERSION}.2014.10.11'
 !define FILE_OWNER 'Pinguino Project'
 !define FILE_URL 'http://www.pinguino.cc/'
 !define MUI_ABORTWARNING
@@ -37,8 +38,8 @@
 ;--------------------------------
 ;General Settings
 
-Name '${FILE_NAME} v${FILE_VERSION}'
-OutFile '${FILE_NAME}-${FILE_VERSION}-setup.exe'
+Name '${FILE_NAME} ${FILE_VERSION}'
+OutFile '${FILE_NAME}-${FILE_INSTVERSION}-setup.exe'
 BrandingText '${FILE_OWNER}'
 InstallDir 'C:\${FILE_NAME}'
 ;ShowInstDetails show
@@ -46,12 +47,12 @@ InstallDir 'C:\${FILE_NAME}'
 RequestExecutionLevel admin
 
 VIAddVersionKey "ProductName" '${FILE_NAME}'
-VIAddVersionKey "ProductVersion" '${FILE_VERSION}'
+VIAddVersionKey "ProductVersion" '${FILE_INSTVERSION}'
 VIAddVersionKey "CompanyName" '${FILE_OWNER}'
 VIAddVersionKey "LegalCopyright" 'Copyright 2014 ${FILE_OWNER}'
 VIAddVersionKey "FileDescription" '${FILE_NAME} Installer'
 VIAddVersionKey "FileVersion" '${FILE_INSTVERSION}'
-VIProductVersion '11.0.0.0'
+VIProductVersion ${FILE_INSTVERSION}
 
 ;--------------------------------
 ;Pages
@@ -72,6 +73,7 @@ VIProductVersion '11.0.0.0'
 !insertmacro MUI_LANGUAGE "English"
 !insertmacro MUI_LANGUAGE "Spanish"
 !insertmacro MUI_LANGUAGE "PortugueseBR"
+!insertmacro MUI_LANGUAGE "Italian"
 
 Function .onInit
 
@@ -88,54 +90,67 @@ FunctionEnd
 LangString msg_not_detected ${LANG_ENGLISH} "not detected in your system. Installing it..."
 LangString msg_not_detected ${LANG_SPANISH} "no detectado en el sistema. Instalando..."
 LangString msg_not_detected ${LANG_PORTUGUESEBR} "não foi detectado em seu sistema. Instalando..."
+LangString msg_not_detected ${LANG_ITALIAN} "non trovato nel tuo sistema. Lo sto installando..."
 
 LangString msg_download_and_install ${LANG_ENGLISH} "We'll install it for you, in 5 secs."
 LangString msg_download_and_install ${LANG_SPANISH} "Lo instalaremos por ti, en 5 segundos."
 LangString msg_download_and_install ${LANG_PORTUGUESEBR} "Nós instalaremos para você, em 5 segundos."
+LangString msg_download_and_install ${LANG_ITALIAN} "Lo installeremo per te, in 5 secondi."
 
 LangString msg_installed ${LANG_ENGLISH} "installed."
 LangString msg_installed ${LANG_SPANISH} "instalado correctamente."
 LangString msg_installed ${LANG_PORTUGUESEBR} "Instalado."
+LangString msg_installed ${LANG_ITALIAN} "Installato."
 
 LangString msg_not_installed ${LANG_ENGLISH} "not installed. Error code was:"
 LangString msg_not_installed ${LANG_SPANISH} "no instalado. El error fue:"
 LangString msg_not_installed ${LANG_PORTUGUESEBR} "não instalado. o erro foi:"
+LangString msg_not_installed ${LANG_ITALIAN} "non installato. L'errore è:"
 
 LangString msg_download_complete ${LANG_ENGLISH} "download complete."
 LangString msg_download_complete ${LANG_SPANISH} "descargado correctamente."
 LangString msg_download_complete ${LANG_PORTUGUESEBR} "download completo."
+LangString msg_download_complete ${LANG_ITALIAN} "download completato."
 
 LangString msg_download_error ${LANG_ENGLISH} "download failed. Error was:"
 LangString msg_download_error ${LANG_SPANISH} "no se pudo descargar. El error fue:"
 LangString msg_download_error ${LANG_PORTUGUESEBR} "o download falhou. que pena!, o erro foi:"
+LangString msg_download_error ${LANG_ITALIAN} "Il download è fallito. L'errore è:"
 
-LangString msg_error_while_extracting ${LANG_ENGLISH} "An error ocurr while extracting files from"
+LangString msg_error_while_extracting ${LANG_ENGLISH} "An error occur while extracting files from"
 LangString msg_error_while_extracting ${LANG_SPANISH} "Se ha producido un error mientras se descomprimia"
 LangString msg_error_while_extracting ${LANG_PORTUGUESEBR} "Houve uma falha no processo de extração de arquivos."
+LangString msg_error_while_extracting ${LANG_ITALIAN} "Si e' verificato un errore durante l'estrazione dei file da"
 
-LangString msg_error_while_copying ${LANG_ENGLISH} "An error ocurr while copying files to"
+LangString msg_error_while_copying ${LANG_ENGLISH} "An error occur while copying files to"
 LangString msg_error_while_copying ${LANG_SPANISH} "Se ha producido un error mientras se copiaban los archivos en el directorio"
 LangString msg_error_while_copying ${LANG_PORTUGUESEBR} "Um erro ocorreu durante a copia de arquivos para o diretório"
+LangString msg_error_while_copying ${LANG_ITALIAN} "Si e' verificato un errore durante la copia dei file in"
 
 LangString msg_your_system_is ${LANG_ENGLISH} "Your Operating System is at least"
 LangString msg_your_system_is ${LANG_SPANISH} "Tu Sistema Operativo es al menos"
 LangString msg_your_system_is ${LANG_PORTUGUESEBR} "Seu sistema operacional é pelo menos"
+LangString msg_your_system_is ${LANG_ITALIAN} "Il tuo sistema operativo deve essere almeno"
 
 LangString msg_installing_drivers ${LANG_ENGLISH} "Installing the Pinguino Project device drivers"
 LangString msg_installing_drivers ${LANG_SPANISH} "Instalando los controladores para el dispositivo Pinguino Project"
 LangString msg_installing_drivers ${LANG_PORTUGUESEBR} "Instalando os controladores para o dispositivo do Projeto Pinguino"
+LangString msg_installing_drivers ${LANG_ITALIAN} "Sto installando i driver per la scheda Pinguino Project"
 
 LangString do_you_want_install_device_drivers ${LANG_ENGLISH} "Do you want to install the device drivers for pinguino-board now?"
 LangString do_you_want_install_device_drivers ${LANG_SPANISH} "Deseas instalar los drivers para la placa Pinguino ahora?"
 LangString do_you_want_install_device_drivers ${LANG_PORTUGUESEBR} "Você deseja instalar os Drivers para a placa do Pinguino Agora?"
+LangString do_you_want_install_device_drivers ${LANG_ITALIAN} "Vuoi installare ora i driver per la scheda Pinguino?"
 
 LangString please_plug_in_your_board ${LANG_ENGLISH} "Please, connect your board, press reset button and install the pre-installed drivers.\n When finish, press 'Ok'."
 LangString please_plug_in_your_board ${LANG_SPANISH} "Por favor, conecta la placa, presiona el boton de reset e instala los drivers pre-instalados.\n Al terminar, presiona 'Ok'."
 LangString please_plug_in_your_board ${LANG_PORTUGUESEBR} "Por favor, conecte a placa, pressione o botão de reset e siga as orientações do sistema.\n Quando terminar a instalação dos Drivers, Pressione OK."
+LangString please_plug_in_your_board ${LANG_ITALIAN} "Per favore, connetti la scheda, premi il pulsante reset e installa i driver.\n Quando finisci, premi 'Ok'."
 
 LangString remember_install_manually_later ${LANG_ENGLISH} "Rememeber install manually the ${libusb-filter} package after you connect your board first time."
 LangString remember_install_manually_later ${LANG_SPANISH} "Recuerda que deberas ejecutar el paquete ${libusb-filter} manualmente, luego de conectar la placa por primera vez."
-LangString remember_install_manually_later ${LANG_PORTUGUESEBR} "Lembre-se de instalar manualmente o pacote ${libusb-filter}, após conectar a sua placa pela primeira vez. "
+LangString remember_install_manually_later ${LANG_PORTUGUESEBR} "Lembre-se de instalar manualmente o pacote ${libusb-filter}, após conectar a sua placa pela primeira vez."
+LangString remember_install_manually_later ${LANG_ITALIAN} "Ricordati di installare manualmente il pacchetto ${libusb-filter}, prima di connettere la scheda per la prima volta."
 
 ;------------------------------------------------------------------------
 ; Installer Sections
