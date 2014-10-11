@@ -1,7 +1,7 @@
 Pinguino-IDE Windows Installer
 ==============================
 
-v1.1.0-beta1 (NOT FOR PRODUCTION USE)
+v1.1.0-beta2 (NOT FOR PRODUCTION USE)
 
 ### Introduction
 
