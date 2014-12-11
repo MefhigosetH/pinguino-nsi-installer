@@ -317,8 +317,7 @@ FunctionEnd
 ; pinguino-ide installation routine.
 Function InstallPinguinoIde
 
-	DetailPrint "pinguino-ide $(msg_not_detected)"
-	DetailPrint $(msg_download_and_install)
+	DetailPrint "pinguino-ide: $(msg_download_and_install)"
 	Sleep 5000
 
 	IfFileExists "$EXEDIR\pinguino-ide.zip" +6 +1
@@ -335,8 +334,7 @@ Function InstallPinguinoIde
 
 	ClearErrors
 
-	DetailPrint "pinguino-libraries $(msg_installed)"
-	Sleep 5000
+	DetailPrint "pinguino-ide $(msg_installed)"
 FunctionEnd
 
 ;--------------------------------------------------------------------------
