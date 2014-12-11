@@ -24,7 +24,7 @@
 !define PySide "PySide-1.2.2.win32-py2.7.exe"
 !define pinguino-ide "http://downloads.sourceforge.net/pinguinoide/pinguino-ide.zip"
 !define pinguino-libraries "http://downloads.sourceforge.net/pinguinoide/pinguino-libraries.zip"
-!define pinguino-compilers "pinguino-compilers.zip"
+!define pinguino-compilers-8 "http://downloads.sourceforge.net/pinguinoide/pinguino-windows32-sdcc-mpic16.zip"
 !define pinguino-compilers-32 "pinguino-compilers-32.zip"
 !define libusb-filter "libusb-win32-devel-filter-1.2.6.0"
 
@@ -166,13 +166,13 @@ Section "Install"
   SetShellVarContext all
 
   ; Detect and install Python...
-  Call InstallPython
+  ;Call InstallPython
 
   ; Detect and install Python dependencies...
-  Call InstallPythonDeps
+  ;Call InstallPythonDeps
 
   ; Detect and install PySide...
-  Call InstallPySide
+  ;Call InstallPySide
 
   ;Install pinguino-ide package...
   Call InstallPinguinoIde
@@ -181,16 +181,16 @@ Section "Install"
   Call InstallPinguinoLibraries
 
   ;Install pinguino-compilers package...
-  Call InstallPinguinoCompilers
+  Call InstallPinguinoCompilers-8bits
 
   ;Install device drivers...
-  Call InstallDrivers
+  ;Call InstallDrivers
 
   ;Publish the project info to the system...
-  Call PublishInfo
+  ;Call PublishInfo
   
   ;Make shorcuts...
-  Call MakeShortcuts
+  ;Call MakeShortcuts
 
   ;Creamos el Unistaller.
   WriteUninstaller "$INSTDIR\pinguino-uninstall.exe"
@@ -363,27 +363,24 @@ FunctionEnd
 
 ;------------------------------------------------------------------------
 ; pinguino-compilers installation routine.
-Function InstallPinguinoCompilers
+Function InstallPinguinoCompilers-8bits
 
-	DetailPrint "pinguino-compilers $(msg_not_detected)"
-	SetOutPath "$TEMP"
+	DetailPrint "pinguino-compiler: $(msg_download_and_install)"
+	Sleep 5000
 	CreateDirectory "$INSTDIR\compilers"
 
-	File "..\${pinguino-compilers}"
+	IfFileExists "$EXEDIR\pinguino-windows32-sdcc-mpic16.zip" +6 +1
+	inetc::get ${pinguino-compilers-8} "$EXEDIR\pinguino-windows32-sdcc-mpic16.zip"
+	Pop $R0
+	StrCmp $R0 "OK" +2
+	Abort "pinguino-compilers $(msg_download_error) $R0!"
+	DetailPrint "pinguino-compilers $(msg_download_complete)"
+
 	ClearErrors
-	ZipDLL::extractall "$TEMP\${pinguino-compilers}" "$INSTDIR\compilers"
+	ZipDLL::extractall "$EXEDIR\pinguino-windows32-sdcc-mpic16.zip" "$INSTDIR\compilers"
 	IfErrors 0 +2
-		Abort "$(msg_error_while_extracting) ${pinguino-compilers}"
+		Abort "$(msg_error_while_extracting) pinguino-windows32-sdcc-mpic16.zip"
 
-	Delete "$TEMP\${pinguino-compilers}"
-
-	File "..\${pinguino-compilers-32}"
-	ClearErrors
-	ZipDLL::extractall "$TEMP\${pinguino-compilers-32}" "$INSTDIR\compilers"
-	IfErrors 0 +2
-		Abort "$(msg_error_while_extracting) ${pinguino-compilers-32}"
-
-	Delete "$TEMP\${pinguino-compilers-32}"
 FunctionEnd
 
 ;------------------------------------------------------------------------
