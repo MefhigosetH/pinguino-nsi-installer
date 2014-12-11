@@ -7,9 +7,9 @@
 ;------------------------------------------------------------------------------
 ;Defines
 
-!define FILE_NAME 'pinguino-ide'
+!define FILE_NAME 'pinguino'
 !define FILE_VERSION '11'
-!define FILE_INSTVERSION '${FILE_VERSION}.2014.10.11'
+!define FILE_INSTVERSION '${FILE_VERSION}.2014.12.10'
 !define FILE_OWNER 'Pinguino Project'
 !define FILE_URL 'http://www.pinguino.cc/'
 !define MUI_ABORTWARNING
@@ -22,7 +22,7 @@
 !define Python27 "python-2.7.7.msi"
 !define PyPIP "get-pip.py"
 !define PySide "PySide-1.2.2.win32-py2.7.exe"
-!define pinguino-ide "pinguino-ide-master.zip"
+!define pinguino-ide "http://downloads.sourceforge.net/pinguinoide/pinguino-ide.zip"
 !define pinguino-libraries "pinguino-libraries.zip"
 !define pinguino-compilers "pinguino-compilers.zip"
 !define pinguino-compilers-32 "pinguino-compilers-32.zip"
@@ -41,7 +41,7 @@
 Name '${FILE_NAME} ${FILE_VERSION}'
 OutFile '${FILE_NAME}-${FILE_INSTVERSION}-setup.exe'
 BrandingText '${FILE_OWNER}'
-InstallDir 'C:\${FILE_NAME}'
+InstallDir 'C:\${FILE_NAME}-${FILE_VERSION}'
 ;ShowInstDetails show
 ;Request Admin execution level. Needed to install drivers.
 RequestExecutionLevel admin
@@ -161,7 +161,7 @@ Section "Install"
   ;InstallDir '$InstallDest\${FILE_NAME}
 
   ;Seteamos el directorio de salida para las instrucciones FILE.
-  SetOutPath "$INSTDIR\v${FILE_VERSION}"
+  SetOutPath "$INSTDIR"
   ;Tipo de instalacion: AllUsers.
   SetShellVarContext all
 
@@ -318,25 +318,25 @@ FunctionEnd
 Function InstallPinguinoIde
 
 	DetailPrint "pinguino-ide $(msg_not_detected)"
-	SetOutPath "$TEMP"
-	File "..\${pinguino-ide}"
+	DetailPrint $(msg_download_and_install)
+	Sleep 5000
+
+	IfFileExists "$EXEDIR\pinguino-ide.zip" +6 +1
+	inetc::get ${pinguino-ide} "$EXEDIR\pinguino-ide.zip"
+	Pop $R0
+	StrCmp $R0 "OK" +2
+	Abort "pinguino-ide $(msg_download_error) $R0!"
+	DetailPrint "pinguino-ide $(msg_download_complete)"
 
 	ClearErrors
-	ZipDLL::extractall "$TEMP\${pinguino-ide}" "$TEMP"
+	ZipDLL::extractall "$EXEDIR\pinguino-ide.zip" "C:\"
 	IfErrors 0 +2
 		Abort "$(msg_error_while_extracting) ${pinguino-ide}"
 
 	ClearErrors
 
-	CreateDirectory "$INSTDIR\v${FILE_VERSION}"
-	CopyFiles "$TEMP\pinguino-ide-master\*.*" "$INSTDIR\v${FILE_VERSION}"
-	IfErrors 0 +2
-		Abort "${pinguino-ide}: $(msg_error_while_copying) $INSTDIR\v${FILE_VERSION}"
-
-	RMDir /r "$TEMP\pinguino-ide-master"
-	Delete "$TEMP\${pinguino-ide}"
-
-	PinguinoIdeAllreadyInstalled:
+	DetailPrint "pinguino-libraries $(msg_installed)"
+	Sleep 5000
 FunctionEnd
 
 ;--------------------------------------------------------------------------
@@ -426,10 +426,10 @@ Function MakeShortcuts
 
   ;Make shortcuts into desktop and start menu to our program...
   DetailPrint "MakeShortcuts begin..."
-  File "/oname=$INSTDIR\v${FILE_VERSION}\pinguino-logo-v2.ico" pinguino-logo-v2.ico
-  CreateShortCut "$DESKTOP\pinguino-ide.lnk" "$INSTDIR\v${FILE_VERSION}\pinguino.bat" "" "$INSTDIR\v${FILE_VERSION}\pinguino-logo-v2.ico"
+  File "/oname=$INSTDIR\pinguino-logo-v2.ico" pinguino-logo-v2.ico
+  CreateShortCut "$DESKTOP\pinguino-ide.lnk" "$INSTDIR\pinguino.bat" "" "$INSTDIR\pinguino-logo-v2.ico"
   CreateDirectory "$SMPROGRAMS\${FILE_OWNER}\"
-  CreateShortCut "$SMPROGRAMS\${FILE_OWNER}\pinguino-ide.lnk" "$INSTDIR\v${FILE_VERSION}\pinguino.bat" "" "$INSTDIR\v${FILE_VERSION}\pinguino-logo-v2.ico"
+  CreateShortCut "$SMPROGRAMS\${FILE_OWNER}\pinguino-ide.lnk" "$INSTDIR\pinguino.bat" "" "$INSTDIR\pinguino-logo-v2.ico"
 FunctionEnd
 
 ;------------------------------------------------------------------------
