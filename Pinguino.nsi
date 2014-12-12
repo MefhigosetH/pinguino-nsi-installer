@@ -9,7 +9,7 @@
 
 !define FILE_NAME 'pinguino'
 !define FILE_VERSION '11'
-!define FILE_INSTVERSION '${FILE_VERSION}.2014.12.10'
+!define FILE_INSTVERSION '${FILE_VERSION}.2014.12.11'
 !define FILE_OWNER 'Pinguino Project'
 !define FILE_URL 'http://www.pinguino.cc/'
 !define MUI_ABORTWARNING
@@ -24,7 +24,7 @@
 !define PySide "PySide-1.2.2.win32-py2.7.exe"
 !define SourceForge "http://downloads.sourceforge.net/pinguinoide"
 !define pinguino-ide "http://downloads.sourceforge.net/pinguinoide/pinguino-ide.zip"
-!define pinguino-libraries "http://downloads.sourceforge.net/pinguinoide/pinguino-libraries.zip"
+!define pinguino-libraries "pinguino-libraries.zip"
 !define pinguino-compilers-8bits "pinguino-windows32-sdcc-mpic16.zip"
 !define pinguino-compilers-32 "pinguino-compilers-32.zip"
 !define libusb-filter "libusb-win32-devel-filter-1.2.6.0"
@@ -345,17 +345,17 @@ Function InstallPinguinoLibraries
 	DetailPrint "pinguino-libraries: $(msg_download_and_install)"
 	Sleep 5000
 
-	IfFileExists "$EXEDIR\pinguino-libraries.zip" +6 +1
-	inetc::get ${pinguino-libraries} "$EXEDIR\pinguino-libraries.zip"
+	IfFileExists "$EXEDIR\${pinguino-libraries}" +6 +1
+	inetc::get "${SourceForge}/${pinguino-libraries}" "$EXEDIR\${pinguino-libraries}"
 	Pop $R0
 	StrCmp $R0 "OK" +2
 	Abort "pinguino-libraries $(msg_download_error) $R0!"
 	DetailPrint "pinguino-libraries $(msg_download_complete)"
 
 	ClearErrors
-	ZipDLL::extractall "$EXEDIR\pinguino-libraries.zip" "C:\"
+	ZipDLL::extractall "$EXEDIR\${pinguino-libraries}" "C:\"
 	IfErrors 0 +2
-		Abort "$(msg_error_while_extracting) pinguino-libraries.zip"
+		Abort "$(msg_error_while_extracting) ${pinguino-libraries}"
 
 	ClearErrors
 
