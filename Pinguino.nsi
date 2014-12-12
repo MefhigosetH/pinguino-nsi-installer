@@ -153,6 +153,11 @@ LangString remember_install_manually_later ${LANG_SPANISH} "Recuerda que deberas
 LangString remember_install_manually_later ${LANG_PORTUGUESEBR} "Lembre-se de instalar manualmente o pacote ${libusb-filter}, após conectar a sua placa pela primeira vez."
 LangString remember_install_manually_later ${LANG_ITALIAN} "Ricordati di installare manualmente il pacchetto ${libusb-filter}, prima di connettere la scheda per la prima volta."
 
+LangString do_you_want_install_compilers_8bits ${LANG_ENGLISH} "Do you want to install Pinguino compilers for 8-bits PICs now?"
+LangString do_you_want_install_compilers_8bits ${LANG_SPANISH} "Deseas instalar el compilador Pinguino para PICs de 8-bits ahora?"
+LangString do_you_want_install_compilers_8bits ${LANG_PORTUGUESEBR} "Do you want to install Pinguino compilers for 8-bits PICs now?"
+LangString do_you_want_install_compilers_8bits ${LANG_ITALIAN} "Do you want to install Pinguino compilers for 8-bits PICs now?"
+
 ;------------------------------------------------------------------------
 ; Installer Sections
 Section "Install"
@@ -176,16 +181,20 @@ Section "Install"
   ;Call InstallPySide
 
   ;Install pinguino-ide package...
-  Call InstallPinguinoIde
+  ;Call InstallPinguinoIde
 
   ;Install pinguino-libraries package...
-  Call InstallPinguinoLibraries
+  ;Call InstallPinguinoLibraries
 
   ;Detect the Architecture and O.S. Version...
   Call DetectArchitecture
 
+  MessageBox MB_YESNO|MB_ICONQUESTION "$(do_you_want_install_compilers_8bits)" IDNO withoutCompilers-8bits
+
   ;Install pinguino-compilers package...
   Call InstallPinguinoCompilers-8bits
+
+  withoutCompilers-8bits:
 
   ;Install device drivers...
   ;Call InstallDrivers
