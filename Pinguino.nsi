@@ -181,6 +181,9 @@ Section "Install"
   ;Install pinguino-libraries package...
   Call InstallPinguinoLibraries
 
+  ;Detect the Architecture and O.S. Version...
+  Call DetectArchitecture
+
   ;Install pinguino-compilers package...
   Call InstallPinguinoCompilers-8bits
 
@@ -362,6 +365,29 @@ Function InstallPinguinoLibraries
 	DetailPrint "pinguino-libraries $(msg_installed)"
 FunctionEnd
 
+;---------------------------------------------------------------------
+;Detect the architecture of host system (32 or 64 bits)
+;and the Operating System Version.
+Function DetectArchitecture
+
+	Var /GLOBAL os_platform
+	StrCpy $os_platform "x86"
+	StrCmp $PROGRAMFILES $PROGRAMFILES64 +2
+	StrCpy $os_platform "amd64"
+
+	Var /GLOBAL os_version
+
+	${If} ${AtLeastWinVista}
+		; System is Microsoft Windows Vista or later...
+		StrCpy $os_version "Vista"
+	${Else}
+		; System is Microsoft Windows XP...
+		StrCpy $os_version "XP"
+	${EndIf}
+
+	DetailPrint "$(msg_your_system_is) Microsoft Windows $os_version ($os_platform)."
+FunctionEnd
+
 ;------------------------------------------------------------------------
 ; pinguino-compilers installation routine.
 Function InstallPinguinoCompilers-8bits
@@ -418,23 +444,6 @@ Function InstallDrivers
 	DetailPrint "$(msg_installing_drivers)..."
 	SetOutPath "$INSTDIR\drivers"
 	File /r "..\drivers\*.*"
-
-	Var /GLOBAL os_platform
-	StrCpy $os_platform "x86"
-	StrCmp $PROGRAMFILES $PROGRAMFILES64 +2
-	StrCpy $os_platform "amd64"
-
-	Var /GLOBAL os_version
-
-	${If} ${AtLeastWinVista}
-		; System is Microsoft Windows Vista or later...
-		StrCpy $os_version "Vista"
-	${Else}
-		; System is Microsoft Windows XP...
-		StrCpy $os_version "XP"
-	${EndIf}
-
-	DetailPrint "$(msg_your_system_is) Microsoft Windows $os_version ($os_platform)."
 
 	; Pinguino device driver install routine...
 	nsExec::Exec '$INSTDIR\drivers\DPInst-$os_platform.exe /F /LM /SW /SA /PATH $INSTDIR\drivers\$os_version\'
