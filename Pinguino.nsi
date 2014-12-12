@@ -23,7 +23,7 @@
 !define PyPIP "get-pip.py"
 !define PySide "PySide-1.2.2.win32-py2.7.exe"
 !define SourceForge "http://downloads.sourceforge.net/pinguinoide"
-!define pinguino-ide "http://downloads.sourceforge.net/pinguinoide/pinguino-ide.zip"
+!define pinguino-ide "pinguino-ide.zip"
 !define pinguino-libraries "pinguino-libraries.zip"
 !define pinguino-compilers-8bits "pinguino-windows32-sdcc-mpic16.zip"
 !define pinguino-compilers-32 "pinguino-compilers-32.zip"
@@ -321,15 +321,15 @@ Function InstallPinguinoIde
 	DetailPrint "pinguino-ide: $(msg_download_and_install)"
 	Sleep 5000
 
-	IfFileExists "$EXEDIR\pinguino-ide.zip" +6 +1
-	inetc::get ${pinguino-ide} "$EXEDIR\pinguino-ide.zip"
+	IfFileExists "$EXEDIR\${pinguino-ide}" +6 +1
+	inetc::get "${SourceForge}/${pinguino-ide}" "$EXEDIR\${pinguino-ide}"
 	Pop $R0
 	StrCmp $R0 "OK" +2
 	Abort "pinguino-ide $(msg_download_error) $R0!"
 	DetailPrint "pinguino-ide $(msg_download_complete)"
 
 	ClearErrors
-	ZipDLL::extractall "$EXEDIR\pinguino-ide.zip" "C:\"
+	ZipDLL::extractall "$EXEDIR\${pinguino-ide}" "C:\"
 	IfErrors 0 +2
 		Abort "$(msg_error_while_extracting) ${pinguino-ide}"
 
