@@ -22,9 +22,10 @@
 !define Python27 "python-2.7.7.msi"
 !define PyPIP "get-pip.py"
 !define PySide "PySide-1.2.2.win32-py2.7.exe"
+!define SourceForge "http://downloads.sourceforge.net/pinguinoide"
 !define pinguino-ide "http://downloads.sourceforge.net/pinguinoide/pinguino-ide.zip"
 !define pinguino-libraries "http://downloads.sourceforge.net/pinguinoide/pinguino-libraries.zip"
-!define pinguino-compilers-8 "http://downloads.sourceforge.net/pinguinoide/pinguino-windows32-sdcc-mpic16.zip"
+!define pinguino-compilers-8bits "pinguino-windows32-sdcc-mpic16.zip"
 !define pinguino-compilers-32 "pinguino-compilers-32.zip"
 !define libusb-filter "libusb-win32-devel-filter-1.2.6.0"
 
@@ -365,21 +366,21 @@ FunctionEnd
 ; pinguino-compilers installation routine.
 Function InstallPinguinoCompilers-8bits
 
-	DetailPrint "pinguino-compiler: $(msg_download_and_install)"
+	DetailPrint "pinguino-compiler-8bits: $(msg_download_and_install)"
 	Sleep 5000
 	CreateDirectory "$INSTDIR\compilers"
 
-	IfFileExists "$EXEDIR\pinguino-windows32-sdcc-mpic16.zip" +6 +1
-	inetc::get ${pinguino-compilers-8} "$EXEDIR\pinguino-windows32-sdcc-mpic16.zip"
+	IfFileExists "$EXEDIR\${pinguino-compilers-8bits}" +6 +1
+	inetc::get "${SourceForge}/${pinguino-compilers-8bits}" "$EXEDIR\${pinguino-compilers-8bits}"
 	Pop $R0
 	StrCmp $R0 "OK" +2
-	Abort "pinguino-compilers $(msg_download_error) $R0!"
-	DetailPrint "pinguino-compilers $(msg_download_complete)"
+	Abort "pinguino-compilers-8bits $(msg_download_error) $R0!"
+	DetailPrint "pinguino-compilers-8bits $(msg_download_complete)"
 
 	ClearErrors
-	ZipDLL::extractall "$EXEDIR\pinguino-windows32-sdcc-mpic16.zip" "$INSTDIR\compilers"
+	ZipDLL::extractall "$EXEDIR\${pinguino-compilers-8bits}" "$INSTDIR\compilers"
 	IfErrors 0 +2
-		Abort "$(msg_error_while_extracting) pinguino-windows32-sdcc-mpic16.zip"
+		Abort "$(msg_error_while_extracting) ${pinguino-compilers-8bits}"
 
 FunctionEnd
 
