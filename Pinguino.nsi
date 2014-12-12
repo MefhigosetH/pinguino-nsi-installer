@@ -25,8 +25,9 @@
 !define SourceForge "http://downloads.sourceforge.net/pinguinoide"
 !define pinguino-ide "pinguino-ide.zip"
 !define pinguino-libraries "pinguino-libraries.zip"
-!define pinguino-compilers-8bits "pinguino-windows32-sdcc-mpic16.zip"
-!define pinguino-compilers-32 "pinguino-compilers-32.zip"
+!define pinguino-compiler32-8bits "pinguino-windows32-sdcc-mpic16.zip"
+!define pinguino-compiler64-8bits "pinguino-windows64-sdcc-mpic16.zip"
+!define pinguino-compiler32-32bits "pinguino-compilers-32.zip"
 !define libusb-filter "libusb-win32-devel-filter-1.2.6.0"
 
 ;--------------------------------
@@ -405,17 +406,22 @@ Function InstallPinguinoCompilers-8bits
 	Sleep 5000
 	CreateDirectory "$INSTDIR\compilers"
 
-	IfFileExists "$EXEDIR\${pinguino-compilers-8bits}" +6 +1
-	inetc::get "${SourceForge}/${pinguino-compilers-8bits}" "$EXEDIR\${pinguino-compilers-8bits}"
+	Var /GLOBAL compiler_8bits
+	StrCpy $compiler_8bits ${pinguino-compiler32-8bits}
+	StrCmp $os_platform "x86" +2
+	StrCpy $compiler_8bits ${pinguino-compiler64-8bits}
+
+	IfFileExists "$EXEDIR\$compiler_8bits" +6 +1
+	inetc::get "${SourceForge}/$compiler_8bits" "$EXEDIR\$compiler_8bits"
 	Pop $R0
 	StrCmp $R0 "OK" +2
 	Abort "pinguino-compilers-8bits $(msg_download_error) $R0!"
 	DetailPrint "pinguino-compilers-8bits $(msg_download_complete)"
 
 	ClearErrors
-	ZipDLL::extractall "$EXEDIR\${pinguino-compilers-8bits}" "$INSTDIR\compilers"
+	ZipDLL::extractall "$EXEDIR\$compiler_8bits" "$INSTDIR\compilers"
 	IfErrors 0 +2
-		Abort "$(msg_error_while_extracting) ${pinguino-compilers-8bits}"
+		Abort "$(msg_error_while_extracting) $compiler_8bits"
 
 FunctionEnd
 
