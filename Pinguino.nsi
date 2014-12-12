@@ -27,7 +27,8 @@
 !define pinguino-libraries "pinguino-libraries.zip"
 !define pinguino-compiler32-8bits "pinguino-windows32-sdcc-mpic16.zip"
 !define pinguino-compiler64-8bits "pinguino-windows64-sdcc-mpic16.zip"
-!define pinguino-compiler32-32bits "pinguino-compilers-32.zip"
+!define pinguino-compiler32-32bits "pinguino-windows32-gcc-mips-elf.zip"
+!define pinguino-compiler64-32bits "pinguino-windows64-gcc-mips-elf.zip"
 !define libusb-filter "libusb-win32-devel-filter-1.2.6.0"
 
 ;--------------------------------
@@ -159,6 +160,11 @@ LangString do_you_want_install_compilers_8bits ${LANG_SPANISH} "Deseas instalar 
 LangString do_you_want_install_compilers_8bits ${LANG_PORTUGUESEBR} "Do you want to install Pinguino compilers for 8-bits PICs now?"
 LangString do_you_want_install_compilers_8bits ${LANG_ITALIAN} "Do you want to install Pinguino compilers for 8-bits PICs now?"
 
+LangString do_you_want_install_compilers_32bits ${LANG_ENGLISH} "Do you want to install Pinguino compilers for 32-bits PICs now?"
+LangString do_you_want_install_compilers_32bits ${LANG_SPANISH} "Deseas instalar el compilador Pinguino para PICs de 32-bits ahora?"
+LangString do_you_want_install_compilers_32bits ${LANG_PORTUGUESEBR} "Do you want to install Pinguino compilers for 32-bits PICs now?"
+LangString do_you_want_install_compilers_32bits ${LANG_ITALIAN} "Do you want to install Pinguino compilers for 32-bits PICs now?"
+
 ;------------------------------------------------------------------------
 ; Installer Sections
 Section "Install"
@@ -173,38 +179,44 @@ Section "Install"
   SetShellVarContext all
 
   ; Detect and install Python...
-  ;Call InstallPython
+  Call InstallPython
 
   ; Detect and install Python dependencies...
-  ;Call InstallPythonDeps
+  Call InstallPythonDeps
 
   ; Detect and install PySide...
-  ;Call InstallPySide
+  Call InstallPySide
 
   ;Install pinguino-ide package...
-  ;Call InstallPinguinoIde
+  Call InstallPinguinoIde
 
   ;Install pinguino-libraries package...
-  ;Call InstallPinguinoLibraries
+  Call InstallPinguinoLibraries
 
   ;Detect the Architecture and O.S. Version...
   Call DetectArchitecture
 
   MessageBox MB_YESNO|MB_ICONQUESTION "$(do_you_want_install_compilers_8bits)" IDNO withoutCompilers-8bits
 
-  ;Install pinguino-compilers package...
+  ;Install 8-bits Pinguino compiler package...
   Call InstallPinguinoCompilers-8bits
 
   withoutCompilers-8bits:
+  MessageBox MB_YESNO|MB_ICONQUESTION "$(do_you_want_install_compilers_32bits)" IDNO withoutCompilers-32bits
+
+  ;Install 32-bits Pinguino compiler package...
+  Call InstallPinguinoCompilers-32bits
+
+  withoutCompilers-32bits:
 
   ;Install device drivers...
-  ;Call InstallDrivers
+  Call InstallDrivers
 
   ;Publish the project info to the system...
-  ;Call PublishInfo
+  Call PublishInfo
   
   ;Make shorcuts...
-  ;Call MakeShortcuts
+  Call MakeShortcuts
 
   ;Creamos el Unistaller.
   WriteUninstaller "$INSTDIR\pinguino-uninstall.exe"
@@ -422,6 +434,33 @@ Function InstallPinguinoCompilers-8bits
 	ZipDLL::extractall "$EXEDIR\$compiler_8bits" "$INSTDIR\compilers"
 	IfErrors 0 +2
 		Abort "$(msg_error_while_extracting) $compiler_8bits"
+
+FunctionEnd
+
+;------------------------------------------------------------------------
+; 32-bits Pinguino compilers installation routine.
+Function InstallPinguinoCompilers-32bits
+
+	DetailPrint "pinguino-compiler-32bits: $(msg_download_and_install)"
+	Sleep 5000
+	CreateDirectory "$INSTDIR\compilers"
+
+	Var /GLOBAL compiler_32bits
+	StrCpy $compiler_32bits ${pinguino-compiler32-32bits}
+	StrCmp $os_platform "x86" +2
+	StrCpy $compiler_32bits ${pinguino-compiler64-32bits}
+
+	IfFileExists "$EXEDIR\$compiler_32bits" +6 +1
+	inetc::get "${SourceForge}/$compiler_32bits" "$EXEDIR\$compiler_32bits"
+	Pop $R0
+	StrCmp $R0 "OK" +2
+	Abort "pinguino-compilers-32bits $(msg_download_error) $R0!"
+	DetailPrint "pinguino-compilers-32bits $(msg_download_complete)"
+
+	ClearErrors
+	ZipDLL::extractall "$EXEDIR\$compiler_32bits" "$INSTDIR\compilers"
+	IfErrors 0 +2
+		Abort "$(msg_error_while_extracting) $compiler_32bits"
 
 FunctionEnd
 
