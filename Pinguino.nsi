@@ -4,6 +4,7 @@
 ;Coded by Victor Villarreal <mefhigoseth@gmail.com>
 ;Translated to Portuguese-BR by Wagner de Queiroz <wagnerdequeiroz@gmail.com>
 ;Translated to Italian by Pasquale Fersini <basquale.fersini@gmail.com>
+;Translated to French by Regis Blanchot <rblanchot@pinguino.cc>
 ;------------------------------------------------------------------------------
 ;Defines
 
@@ -77,6 +78,7 @@ VIProductVersion ${FILE_INSTVERSION}
 !insertmacro MUI_LANGUAGE "Spanish"
 !insertmacro MUI_LANGUAGE "PortugueseBR"
 !insertmacro MUI_LANGUAGE "Italian"
+!insertmacro MUI_LANGUAGE "French"
 
 Function .onInit
 
@@ -94,76 +96,91 @@ LangString msg_not_detected ${LANG_ENGLISH} "not detected in your system. Instal
 LangString msg_not_detected ${LANG_SPANISH} "no detectado en el sistema. Instalando..."
 LangString msg_not_detected ${LANG_PORTUGUESEBR} "não foi detectado em seu sistema. Instalando..."
 LangString msg_not_detected ${LANG_ITALIAN} "non trovato nel tuo sistema. Lo sto installando..."
+LangString msg_not_detected ${LANG_FRENCH} " "
 
 LangString msg_download_and_install ${LANG_ENGLISH} "We'll install it for you, in 5 secs."
 LangString msg_download_and_install ${LANG_SPANISH} "Lo instalaremos por ti, en 5 segundos."
 LangString msg_download_and_install ${LANG_PORTUGUESEBR} "Nós instalaremos para você, em 5 segundos."
 LangString msg_download_and_install ${LANG_ITALIAN} "Lo installeremo per te, in 5 secondi."
+LangString msg_download_and_install ${LANG_FRENCH} "L'installation commencera dans 5 secondes."
 
 LangString msg_installed ${LANG_ENGLISH} "installed."
 LangString msg_installed ${LANG_SPANISH} "instalado correctamente."
 LangString msg_installed ${LANG_PORTUGUESEBR} "Instalado."
 LangString msg_installed ${LANG_ITALIAN} "Installato."
+LangString msg_installed ${LANG_FRENCH} "Installé."
 
 LangString msg_not_installed ${LANG_ENGLISH} "not installed. Error code was:"
 LangString msg_not_installed ${LANG_SPANISH} "no instalado. El error fue:"
 LangString msg_not_installed ${LANG_PORTUGUESEBR} "não instalado. o erro foi:"
 LangString msg_not_installed ${LANG_ITALIAN} "non installato. L'errore è:"
+LangString msg_not_installed ${LANG_FRENCH} "Installation impossible. Erreur:"
 
 LangString msg_download_complete ${LANG_ENGLISH} "download complete."
 LangString msg_download_complete ${LANG_SPANISH} "descargado correctamente."
 LangString msg_download_complete ${LANG_PORTUGUESEBR} "download completo."
 LangString msg_download_complete ${LANG_ITALIAN} "download completato."
+LangString msg_download_complete ${LANG_FRENCH} "Téléchargement terminé."
 
 LangString msg_download_error ${LANG_ENGLISH} "download failed. Error was:"
 LangString msg_download_error ${LANG_SPANISH} "no se pudo descargar. El error fue:"
 LangString msg_download_error ${LANG_PORTUGUESEBR} "o download falhou. que pena!, o erro foi:"
 LangString msg_download_error ${LANG_ITALIAN} "Il download è fallito. L'errore è:"
+LangString msg_download_error ${LANG_FRENCH} "Echec du téléchargement. Erreur :"
 
 LangString msg_error_while_extracting ${LANG_ENGLISH} "An error occur while extracting files from"
 LangString msg_error_while_extracting ${LANG_SPANISH} "Se ha producido un error mientras se descomprimia"
 LangString msg_error_while_extracting ${LANG_PORTUGUESEBR} "Houve uma falha no processo de extração de arquivos."
 LangString msg_error_while_extracting ${LANG_ITALIAN} "Si e' verificato un errore durante l'estrazione dei file da"
+LangString msg_error_while_extracting ${LANG_FRENCH} "Erreur pendant la décompression des fichiers."
 
 LangString msg_error_while_copying ${LANG_ENGLISH} "An error occur while copying files to"
 LangString msg_error_while_copying ${LANG_SPANISH} "Se ha producido un error mientras se copiaban los archivos en el directorio"
 LangString msg_error_while_copying ${LANG_PORTUGUESEBR} "Um erro ocorreu durante a copia de arquivos para o diretório"
 LangString msg_error_while_copying ${LANG_ITALIAN} "Si e' verificato un errore durante la copia dei file in"
+LangString msg_error_while_copying ${LANG_FRENCH} "Erreur lors de la copie des fichiers dans"
 
 LangString msg_your_system_is ${LANG_ENGLISH} "Your Operating System is at least"
 LangString msg_your_system_is ${LANG_SPANISH} "Tu Sistema Operativo es al menos"
 LangString msg_your_system_is ${LANG_PORTUGUESEBR} "Seu sistema operacional é pelo menos"
 LangString msg_your_system_is ${LANG_ITALIAN} "Il tuo sistema operativo deve essere almeno"
+LangString msg_your_system_is ${LANG_FRENCH} "Votre système d'opération (OS) est"
 
 LangString msg_installing_drivers ${LANG_ENGLISH} "Installing the Pinguino Project device drivers"
 LangString msg_installing_drivers ${LANG_SPANISH} "Instalando los controladores para el dispositivo Pinguino Project"
 LangString msg_installing_drivers ${LANG_PORTUGUESEBR} "Instalando os controladores para o dispositivo do Projeto Pinguino"
 LangString msg_installing_drivers ${LANG_ITALIAN} "Sto installando i driver per la scheda Pinguino Project"
+LangString msg_installing_drivers ${LANG_FRENCH} "Installation des pilotes Pinguino"
 
 LangString do_you_want_install_device_drivers ${LANG_ENGLISH} "Do you want to install the device drivers for pinguino-board now?"
 LangString do_you_want_install_device_drivers ${LANG_SPANISH} "Deseas instalar los drivers para la placa Pinguino ahora?"
 LangString do_you_want_install_device_drivers ${LANG_PORTUGUESEBR} "Você deseja instalar os Drivers para a placa do Pinguino Agora?"
 LangString do_you_want_install_device_drivers ${LANG_ITALIAN} "Vuoi installare ora i driver per la scheda Pinguino?"
+LangString do_you_want_install_device_drivers ${LANG_FRENCH} "Voulez-vous installer les pilotes USB pour les cartes Pinguino ?"
 
 LangString please_plug_in_your_board ${LANG_ENGLISH} "Please, connect your board, press reset button and install the pre-installed drivers.\n When finish, press 'Ok'."
 LangString please_plug_in_your_board ${LANG_SPANISH} "Por favor, conecta la placa, presiona el boton de reset e instala los drivers pre-instalados.\n Al terminar, presiona 'Ok'."
 LangString please_plug_in_your_board ${LANG_PORTUGUESEBR} "Por favor, conecte a placa, pressione o botão de reset e siga as orientações do sistema.\n Quando terminar a instalação dos Drivers, Pressione OK."
 LangString please_plug_in_your_board ${LANG_ITALIAN} "Per favore, connetti la scheda, premi il pulsante reset e installa i driver.\n Quando finisci, premi 'Ok'."
+LangString please_plug_in_your_board ${LANG_FRENCH} "Connectez votre carte Pinguino au PC, pressez le bouton RESET et procédez à l'installation. A la fin appuyez sur 'OK'."
 
-LangString remember_install_manually_later ${LANG_ENGLISH} "Rememeber install manually the ${libusb-filter} package after you connect your board first time."
+LangString remember_install_manually_later ${LANG_ENGLISH} "Rememeber to install manually the ${libusb-filter} package after you connect your board the first time."
 LangString remember_install_manually_later ${LANG_SPANISH} "Recuerda que deberas ejecutar el paquete ${libusb-filter} manualmente, luego de conectar la placa por primera vez."
 LangString remember_install_manually_later ${LANG_PORTUGUESEBR} "Lembre-se de instalar manualmente o pacote ${libusb-filter}, após conectar a sua placa pela primeira vez."
 LangString remember_install_manually_later ${LANG_ITALIAN} "Ricordati di installare manualmente il pacchetto ${libusb-filter}, prima di connettere la scheda per la prima volta."
+LangString remember_install_manually_later ${LANG_FRENCH} "N'oubliez pas d'installer ${libusb-filter} après la première connexion de votre carte."
 
 LangString do_you_want_install_compilers_8bits ${LANG_ENGLISH} "Do you want to install Pinguino compilers for 8-bits PICs now?"
 LangString do_you_want_install_compilers_8bits ${LANG_SPANISH} "Deseas instalar el compilador Pinguino para PICs de 8-bits ahora?"
 LangString do_you_want_install_compilers_8bits ${LANG_PORTUGUESEBR} "Do you want to install Pinguino compilers for 8-bits PICs now?"
 LangString do_you_want_install_compilers_8bits ${LANG_ITALIAN} "Do you want to install Pinguino compilers for 8-bits PICs now?"
+LangString do_you_want_install_compilers_8bits ${LANG_FRENCH} "Voulez-vous procéder à l'installation du compilateur 8-bit (PIC18F) ?"
 
 LangString do_you_want_install_compilers_32bits ${LANG_ENGLISH} "Do you want to install Pinguino compilers for 32-bits PICs now?"
 LangString do_you_want_install_compilers_32bits ${LANG_SPANISH} "Deseas instalar el compilador Pinguino para PICs de 32-bits ahora?"
 LangString do_you_want_install_compilers_32bits ${LANG_PORTUGUESEBR} "Do you want to install Pinguino compilers for 32-bits PICs now?"
 LangString do_you_want_install_compilers_32bits ${LANG_ITALIAN} "Do you want to install Pinguino compilers for 32-bits PICs now?"
+LangString do_you_want_install_compilers_32bits ${LANG_FRENCH} "Voulez-vous procéder à l'installation du compilateur 32-bit (PIC32MX) ?"
 
 ;------------------------------------------------------------------------
 ; Installer Sections
