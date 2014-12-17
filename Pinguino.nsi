@@ -10,7 +10,7 @@
 
 !define FILE_NAME 'pinguino'
 !define FILE_VERSION '11'
-!define FILE_INSTVERSION '${FILE_VERSION}.2014.12.14'
+!define FILE_INSTVERSION '${FILE_VERSION}.2014.12.16'
 !define FILE_OWNER 'Pinguino Project'
 !define FILE_URL 'http://www.pinguino.cc/'
 !define MUI_ABORTWARNING
@@ -522,11 +522,14 @@ Function InstallDrivers
 	MessageBox MB_YESNO|MB_ICONQUESTION "$(do_you_want_install_device_drivers)" IDNO withoutBoard
 	MessageBox MB_USERICON|MB_OK "$(please_plug_in_your_board)"
 
-	; LibUSB libraries installation routine...
+	; LibUSB libraries installation routine... Needed only for XP.
+	StrCmp $os_version "Vista" Done
 	ExecWait '"$INSTDIR\drivers\LibUSB\${libusb-filter}"' $0
 	${if} $0 != "0"
 		Abort "LibUSB $(msg_not_installed) $0!"
 	${endif}
+
+	Done:
 	Return
 
 	withoutBoard:
