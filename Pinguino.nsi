@@ -248,9 +248,7 @@ Section "Uninstall"
   SetShellVarContext all
 
   ;Eliminamos todos los ficheros que instalamos...
-  RMDir /r /REBOOTOK "$INSTDIR\v11"
-  RMDir /r /REBOOTOK "$INSTDIR\libraries"
-  RMDir /r /REBOOTOK "$INSTDIR\compilers"
+  RMDir /r /REBOOTOK "$INSTDIR\"
 
   Delete "$DESKTOP\pinguino-ide.lnk"
   RMDir /r "$SMPROGRAMS\${FILE_OWNER}\"
@@ -512,9 +510,9 @@ FunctionEnd
 ; Pinguino device driver pre-installation and LibUSB routine.
 Function InstallDrivers
 
-	DetailPrint "$(msg_installing_drivers)..."
 	SetOutPath "$INSTDIR\drivers"
 	File /r "..\drivers\*.*"
+	DetailPrint "$(msg_installing_drivers)..."
 
 	; Pinguino device driver install routine...
 	nsExec::Exec '$INSTDIR\drivers\DPInst-$os_platform.exe /F /LM /SW /SA /PATH $INSTDIR\drivers\$os_version\'
@@ -529,10 +527,9 @@ Function InstallDrivers
 		Abort "LibUSB $(msg_not_installed) $0!"
 	${endif}
 
-	Done:
 	Return
 
 	withoutBoard:
 		MessageBox MB_ICONEXCLAMATION|MB_OK "$(remember_install_manually_later)"
-
+	Done:
 FunctionEnd
