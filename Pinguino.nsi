@@ -158,10 +158,10 @@ LangString do_you_want_install_device_drivers ${LANG_PORTUGUESEBR} "Você deseja
 LangString do_you_want_install_device_drivers ${LANG_ITALIAN} "Vuoi installare ora i driver per la scheda Pinguino?"
 LangString do_you_want_install_device_drivers ${LANG_FRENCH} "Voulez-vous installer les pilotes USB pour les cartes Pinguino ?"
 
-LangString please_plug_in_your_board ${LANG_ENGLISH} "Please, connect your board, press reset button and install the pre-installed drivers.\n When finish, press 'Ok'."
-LangString please_plug_in_your_board ${LANG_SPANISH} "Por favor, conecta la placa, presiona el boton de reset e instala los drivers pre-instalados.\n Al terminar, presiona 'Ok'."
-LangString please_plug_in_your_board ${LANG_PORTUGUESEBR} "Por favor, conecte a placa, pressione o botão de reset e siga as orientações do sistema.\n Quando terminar a instalação dos Drivers, Pressione OK."
-LangString please_plug_in_your_board ${LANG_ITALIAN} "Per favore, connetti la scheda, premi il pulsante reset e installa i driver.\n Quando finisci, premi 'Ok'."
+LangString please_plug_in_your_board ${LANG_ENGLISH} "Please, connect your board, press reset button and install the pre-installed drivers. When finish, press 'Ok'."
+LangString please_plug_in_your_board ${LANG_SPANISH} "Por favor, conecta la placa, presiona el boton de reset e instala los drivers pre-instalados. Al terminar, presiona 'Ok'."
+LangString please_plug_in_your_board ${LANG_PORTUGUESEBR} "Por favor, conecte a placa, pressione o botão de reset e siga as orientações do sistema. Quando terminar a instalação dos Drivers, Pressione OK."
+LangString please_plug_in_your_board ${LANG_ITALIAN} "Per favore, connetti la scheda, premi il pulsante reset e installa i driver. Quando finisci, premi 'Ok'."
 LangString please_plug_in_your_board ${LANG_FRENCH} "Connectez votre carte Pinguino au PC, pressez le bouton RESET et procédez à l'installation. A la fin appuyez sur 'OK'."
 
 LangString remember_install_manually_later ${LANG_ENGLISH} "Rememeber to install manually the ${libusb-filter} package after you connect your board the first time."
