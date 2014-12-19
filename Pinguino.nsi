@@ -57,6 +57,8 @@ InstallDir 'C:\${FILE_NAME}'
 ;Languages
 
 !insertmacro MUI_LANGUAGE "Spanish"
+;Insert Translation Portugues Brasil by Wagner de Queiroz
+!insertmacro MUI_LANGUAGE "Portuguese(BR)"
 
 ;--------------------------------
 ;Installer Sections
