@@ -172,13 +172,13 @@ LangString remember_install_manually_later ${LANG_FRENCH} "N'oubliez pas d'insta
 
 LangString do_you_want_install_compilers_8bits ${LANG_ENGLISH} "Do you want to install Pinguino compilers for 8-bits PICs now?"
 LangString do_you_want_install_compilers_8bits ${LANG_SPANISH} "Deseas instalar el compilador Pinguino para PICs de 8-bits ahora?"
-LangString do_you_want_install_compilers_8bits ${LANG_PORTUGUESEBR} "Do you want to install Pinguino compilers for 8-bits PICs now?"
+LangString do_you_want_install_compilers_8bits ${LANG_PORTUGUESEBR} "Você deseja instalar o compilador Pinguino para PICs de 8-bits agora?"
 LangString do_you_want_install_compilers_8bits ${LANG_ITALIAN} "Do you want to install Pinguino compilers for 8-bits PICs now?"
 LangString do_you_want_install_compilers_8bits ${LANG_FRENCH} "Voulez-vous procéder à l'installation du compilateur 8-bit (PIC18F) ?"
 
 LangString do_you_want_install_compilers_32bits ${LANG_ENGLISH} "Do you want to install Pinguino compilers for 32-bits PICs now?"
 LangString do_you_want_install_compilers_32bits ${LANG_SPANISH} "Deseas instalar el compilador Pinguino para PICs de 32-bits ahora?"
-LangString do_you_want_install_compilers_32bits ${LANG_PORTUGUESEBR} "Do you want to install Pinguino compilers for 32-bits PICs now?"
+LangString do_you_want_install_compilers_32bits ${LANG_PORTUGUESEBR} "Você deseja instalar o compilador Pinguino para PICs de 32-bits agora?"
 LangString do_you_want_install_compilers_32bits ${LANG_ITALIAN} "Do you want to install Pinguino compilers for 32-bits PICs now?"
 LangString do_you_want_install_compilers_32bits ${LANG_FRENCH} "Voulez-vous procéder à l'installation du compilateur 32-bit (PIC32MX) ?"
 
