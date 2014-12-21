@@ -10,7 +10,7 @@
 
 !define FILE_NAME 'pinguino'
 !define FILE_VERSION '11'
-!define FILE_INSTVERSION '${FILE_VERSION}.2014.12.16'
+!define FILE_INSTVERSION '${FILE_VERSION}.2014.12.21'
 !define FILE_OWNER 'Pinguino Project'
 !define FILE_URL 'http://www.pinguino.cc/'
 !define MUI_ABORTWARNING
@@ -369,7 +369,7 @@ Function InstallPinguinoIde
 	DetailPrint "pinguino-ide $(msg_download_complete)"
 
 	ClearErrors
-	ZipDLL::extractall "$EXEDIR\${pinguino-ide}" "C:\"
+	nsisunz::Unzip "$EXEDIR\${pinguino-ide}" "C:\"
 	IfErrors 0 +2
 		Abort "$(msg_error_while_extracting) ${pinguino-ide}"
 
@@ -393,7 +393,7 @@ Function InstallPinguinoLibraries
 	DetailPrint "pinguino-libraries $(msg_download_complete)"
 
 	ClearErrors
-	ZipDLL::extractall "$EXEDIR\${pinguino-libraries}" "C:\"
+	nsisunz::Unzip "$EXEDIR\${pinguino-libraries}" "C:\"
 	IfErrors 0 +2
 		Abort "$(msg_error_while_extracting) ${pinguino-libraries}"
 
@@ -446,7 +446,7 @@ Function InstallPinguinoCompilers-8bits
 	DetailPrint "pinguino-compilers-8bits $(msg_download_complete)"
 
 	ClearErrors
-	ZipDLL::extractall "$EXEDIR\$compiler_8bits" "$INSTDIR\compilers"
+	nsisunz::Unzip "$EXEDIR\$compiler_8bits" "$INSTDIR\compilers"
 	IfErrors 0 +2
 		Abort "$(msg_error_while_extracting) $compiler_8bits"
 
@@ -473,7 +473,7 @@ Function InstallPinguinoCompilers-32bits
 	DetailPrint "pinguino-compilers-32bits $(msg_download_complete)"
 
 	ClearErrors
-	ZipDLL::extractall "$EXEDIR\$compiler_32bits" "$INSTDIR\compilers"
+	nsisunz::Unzip "$EXEDIR\$compiler_32bits" "$INSTDIR\compilers"
 	IfErrors 0 +2
 		Abort "$(msg_error_while_extracting) $compiler_32bits"
 

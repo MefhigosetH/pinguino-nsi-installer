@@ -25,7 +25,7 @@ Some goals achieved are:
   + Windows Vista (32 and 64-bits).
   + Windows 7 (32 and 64-bits).
   + Windows 8 (32 and 64-bits).
-* 500Mb free space on disk for all the installed software.
+* 300Mb free space on disk for all the installed software.
 
 NOTE: Windows XP 64-bits is NOT supported or tested yet.
 
@@ -48,13 +48,16 @@ It detect and install the following packages:
 
 ### Features
 * PIC32 compilers and libraries added.
-* Italian language translation, thanks to Pasquale Fersini.
 * French language translation, thanks to Regis Blanchot.
+* Unicode support.
 * Download the proper Pinguino Compiler based on system architecture (32/64).
 * Allows user to select the compilers to be installed (PIC8 and/or PIC32).
 
 ### Improvements
 * The installer get the latest Pinguino packages from SourceForge.
+* Unzip routine speed-up improvement.
+* Italian language translation update, thanks to Pasquale Fersini.
+* Portugese Brazil language translation update, thanks to Wagner de Queiroz.
 
 ### Fixes
 * Fixed Windows Vista and later Pinguino device driver pre-install.
