@@ -507,6 +507,13 @@ Function MakeShortcuts
   CreateShortCut "$DESKTOP\pinguino-ide.lnk" "$INSTDIR\pinguino.bat" "" "$INSTDIR\pinguino-logo-v2.ico"
   CreateDirectory "$SMPROGRAMS\${FILE_OWNER}\"
   CreateShortCut "$SMPROGRAMS\${FILE_OWNER}\pinguino-ide.lnk" "$INSTDIR\pinguino.bat" "" "$INSTDIR\pinguino-logo-v2.ico"
+
+  ;Execute pinguino-ide post_install routine...
+	ExecWait '"C:\Python27\python" "$INSTDIR\post_install.py"' $0
+	${if} $0 != "0"
+		Abort "post_install $(msg_not_installed) $0!"
+	${endif}
+
 FunctionEnd
 
 ;------------------------------------------------------------------------
