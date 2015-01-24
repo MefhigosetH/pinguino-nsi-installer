@@ -10,7 +10,7 @@
 
 !define FILE_NAME 'pinguino'
 !define FILE_VERSION '11'
-!define FILE_INSTVERSION '${FILE_VERSION}.2014.12.21'
+!define FILE_INSTVERSION '${FILE_VERSION}.2015.01.24'
 !define FILE_OWNER 'Pinguino Project'
 !define FILE_URL 'http://www.pinguino.cc/'
 !define MUI_ABORTWARNING
@@ -361,18 +361,21 @@ Function InstallPinguinoIde
 	DetailPrint "pinguino-ide: $(msg_download_and_install)"
 	Sleep 5000
 
-	IfFileExists "$EXEDIR\${pinguino-ide}" +6 +1
+	IfFileExists "$EXEDIR\${pinguino-ide}" pinguinoIDEDownloaded
+	pinguinoIDEretry:
 	inetc::get "${SourceForge}/${pinguino-ide}" "$EXEDIR\${pinguino-ide}"
 	Pop $R0
-	StrCmp $R0 "OK" +2
+	StrCmp $R0 "OK" pinguinoIDEDownloaded
+	MessageBox MB_YESNO|MB_ICONQUESTION "pinguino-ide $(msg_download_error) $R0! Retry?" IDYES pinguinoIDEretry
 	Abort "pinguino-ide $(msg_download_error) $R0!"
+
+	pinguinoIDEDownloaded:
 	DetailPrint "pinguino-ide $(msg_download_complete)"
 
 	ClearErrors
 	nsisunz::Unzip "$EXEDIR\${pinguino-ide}" "C:\"
 	IfErrors 0 +2
 		Abort "$(msg_error_while_extracting) ${pinguino-ide}"
-
 	ClearErrors
 
 	DetailPrint "pinguino-ide $(msg_installed)"
