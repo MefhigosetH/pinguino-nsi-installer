@@ -524,7 +524,7 @@ Function InstallDrivers
 	MessageBox MB_USERICON|MB_OK "$(please_plug_in_your_board)"
 
 	; LibUSB libraries installation routine... Needed only for XP.
-	StrCmp $os_version "Vista" Done
+	;StrCmp $os_version "Vista" Done
 	ExecWait '"$INSTDIR\drivers\LibUSB\${libusb-filter}"' $0
 	${if} $0 != "0"
 		Abort "LibUSB $(msg_not_installed) $0!"
