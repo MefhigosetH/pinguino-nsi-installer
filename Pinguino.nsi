@@ -10,7 +10,7 @@
 
 !define FILE_NAME 'pinguino'
 !define FILE_VERSION '11'
-!define FILE_INSTVERSION '${FILE_VERSION}.2015.01.24'
+!define FILE_INSTVERSION '${FILE_VERSION}.2015.02.02'
 !define FILE_OWNER 'Pinguino Project'
 !define FILE_URL 'http://www.pinguino.cc/'
 !define MUI_ABORTWARNING
